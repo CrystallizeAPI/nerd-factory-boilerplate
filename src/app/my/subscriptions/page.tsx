@@ -1,6 +1,6 @@
 import { decodeToken } from "@/core/auth.server";
 import { container } from "@/core/container.server";
-import { fetchSubscriptionContractByCustomerIdentifier } from "@/core/fetch-user-subscriptions.server";
+import { EnrichedPhase, fetchSubscriptionContractByCustomerIdentifier } from "@/core/fetch-user-subscriptions.server";
 import { cookies } from "next/headers";
 
 export default async function MySubscriptions() {
@@ -15,7 +15,6 @@ export default async function MySubscriptions() {
                 <h1 className="text-2xl">My Subscriptions</h1>
                 <ul>
                     {contracts.map((contract) => {
-                        console.dir({ contract }, { depth: null })
                         return <li key={contract.id} className="p-4 border-2 border-gray-200 rounded-lg m-4">
                             <div className="flex flex-row gap-2">
                                 <div className="border-r-2 pr-2">
@@ -46,11 +45,9 @@ export default async function MySubscriptions() {
 }
 
 
-type Phase = Awaited<ReturnType<typeof fetchSubscriptionContractByCustomerIdentifier>>[number]['initial' | 'recurring']
-
 function Period({ title, phase }: {
     title: string
-    phase: Phase
+    phase: EnrichedPhase
 }
 ) {
     return <div className="">
@@ -68,7 +65,7 @@ function Period({ title, phase }: {
                 </tr>
             </thead>
             <tbody>
-                {phase.meteredVariables.map((mv: Phase['meteredVariables']) => {
+                {phase.meteredVariables.map((mv) => {
                     return <tr key={mv.identifier}>
                         <td>{mv.name}</td>
                         <td>{mv.unit}</td>
@@ -76,7 +73,7 @@ function Period({ title, phase }: {
                         <td>
                             <table>
                                 <tbody>
-                                    {mv.tiers.map((tier: Phase['meteredVariables']['tiers'][number]) => {
+                                    {mv.tiers.map((tier) => {
                                         return <tr key={`${mv.identifier}-${tier.threshold}`}>
                                             <td>Threshold: {tier.threshold}</td>
                                             <td>Price: {tier.price}</td>

@@ -2,27 +2,131 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 
-export const enrichMeteredVariables = (contract: any): any => {
-  const definition: Record<string, any> =
-    contract.subscriptionPlan?.meteredVariables?.reduce((accumulator: any, variable: any) => {
+type MeteredVariable = {
+  id: string;
+  tierType: string;
+  tiers: {
+    currency: string;
+    threshold: number;
+    price: number;
+  }[];
+};
+
+type PlanMeteredVariable = {
+  id: string;
+  identifier: string;
+  name: string;
+  unit: string;
+}
+
+type EnrichedMeteredVariable = MeteredVariable & PlanMeteredVariable;
+
+type Phase = {
+  period: number;
+  unit: string;
+  price: number;
+  currency: string;
+  meteredVariables?: MeteredVariable[];
+}
+
+export type EnrichedPhase = Omit<Phase, 'meteredVariables'> & {
+  meteredVariables?: EnrichedMeteredVariable[];
+}
+
+type SubscriptionContract = {
+  id: string;
+  tenantId: string;
+  subscriptionPlan: {
+    name: string;
+    identifier: string;
+    meteredVariables: PlanMeteredVariable[];
+  };
+  item: {
+    name: string;
+    sku: string;
+  };
+  payment: {
+    properties: {
+      property: string;
+      value: string;
+    }[];
+  };
+  initial?: Phase;
+  recurring: Phase;
+  status: {
+    renewAt: string;
+    activeUntil: string;
+    price: number;
+    currency: string;
+  };
+  meta: {
+    key: string;
+    value: string;
+  }[];
+  customerIdentifier: string;
+  customer: {
+    identifier: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    phone: string;
+    taxNumber: string;
+    meta: {
+      key: string;
+      value: string;
+    }[];
+    externalReferences: {
+      key: string;
+      value: string;
+    }[];
+    addresses: {
+      type: string;
+      lastName: string;
+      firstName: string;
+      email: string;
+      middleName: string;
+      street: string;
+      street2: string;
+      city: string;
+      country: string;
+      state: string;
+      postalCode: string;
+      phone: string;
+      streetNumber: string;
+    }[];
+  };
+}
+
+
+export type EnrichedSubscriptionContract = Omit<SubscriptionContract, 'initial' | 'recuring'> & {
+  initial?: EnrichedPhase;
+  recurring: EnrichedPhase;
+};
+
+export const enrichMeteredVariables = (contract: SubscriptionContract): EnrichedSubscriptionContract => {
+  const { initial, recurring } = contract;
+
+  const definition: Record<string, PlanMeteredVariable> =
+    contract.subscriptionPlan?.meteredVariables?.reduce((accumulator: any, variable) => {
       accumulator[variable.id] = variable;
       return accumulator;
     }, {}) ?? [];
 
-  const enrichedRecurring = {
-    ...contract.recurring,
+  const enrichedRecurring: EnrichedSubscriptionContract['recurring'] = {
+    ...recurring,
     meteredVariables:
-      contract.recurring?.meteredVariables?.map((variable: any) => {
+      recurring.meteredVariables?.map((variable) => {
         return {
           ...variable,
           ...definition[variable.id],
         };
-      }) ?? [],
+      }) ?? []
   };
 
-  if (!contract.initial) {
+  if (!initial) {
     return {
-      ...contract,
+      ...contract as Omit<SubscriptionContract, 'initial' | 'recurring'>,
       recurring: enrichedRecurring,
     };
   }
@@ -30,9 +134,9 @@ export const enrichMeteredVariables = (contract: any): any => {
   return {
     ...contract,
     initial: {
-      ...contract.initial,
+      ...initial,
       meteredVariables:
-        contract.initial?.meteredVariables?.map((variable: any) => {
+        initial.meteredVariables?.map((variable) => {
           return {
             ...variable,
             ...definition[variable.id],
@@ -46,8 +150,69 @@ export const enrichMeteredVariables = (contract: any): any => {
 const nodeQuery = () => {
   return {
     id: true,
+    tenantId: true,
+    subscriptionPlan: {
+      name: true,
+      identifier: true,
+      meteredVariables: {
+        id: true,
+        identifier: true,
+        name: true,
+        unit: true,
+      },
+    },
+    item: {
+      name: true,
+      sku: true,
+    },
+    payment: {
+      __on: {
+        __typeName: "CustomPayment",
+        properties: {
+          property: true,
+          value: true
+        }
+      }
+    },
+    initial: {
+      period: true,
+      unit: true,
+      price: true,
+      currency: true,
+      meteredVariables: {
+        id: true,
+        tierType: true,
+        tiers: {
+          currency: true,
+          threshold: true,
+          price: true,
+        },
+      },
+    },
+    recurring: {
+      period: true,
+      unit: true,
+      price: true,
+      currency: true,
+      meteredVariables: {
+        id: true,
+        tierType: true,
+        tiers: {
+          currency: true,
+          threshold: true,
+          price: true,
+        },
+      },
+    },
+    status: {
+      renewAt: true,
+      activeUntil: true,
+      price: true,
+      currency: true,
+    },
     customerIdentifier: true,
     customer: {
+      identifier: true,
       email: true,
       firstName: true,
       lastName: true,
@@ -78,65 +243,15 @@ const nodeQuery = () => {
         streetNumber: true,
       },
     },
-    subscriptionPlan: {
-      name: true,
-      identifier: true,
-      meteredVariables: {
-        id: true,
-        identifier: true,
-        name: true,
-        unit: true,
-      },
-    },
-    item: {
-      name: true,
-      sku: true,
-    },
-    status: {
-      price: true,
-      currency: true,
-      activeUntil: true,
-      renewAt: true,
-    },
-    initial: {
-      period: true,
-      unit: true,
-      price: true,
-      currency: true,
-      meteredVariables: {
-        id: true,
-        tierType: true,
-        tiers: {
-          threshold: true,
-          price: true,
-          currency: true,
-        },
-      },
-    },
-    recurring: {
-      period: true,
-      unit: true,
-      price: true,
-      currency: true,
-      meteredVariables: {
-        id: true,
-        tierType: true,
-        tiers: {
-          threshold: true,
-          price: true,
-          currency: true,
-        },
-      },
-    },
   };
 };
 
 
-type SubscriptionContractResult = any
+
 type Deps = {
   client: ClientInterface
 }
-export const fetchSubscriptionContractByCustomerIdentifier = async (customerIdentifier: string, { client }: Deps): Promise<SubscriptionContractResult[]> => {
+export const fetchSubscriptionContractByCustomerIdentifier = async (customerIdentifier: string, { client }: Deps): Promise<EnrichedSubscriptionContract[]> => {
   const buildQueryFrom = (cursor?: string) => {
     const args: Record<string, any> = {
       first: 25,
@@ -184,7 +299,7 @@ export const fetchSubscriptionContractByCustomerIdentifier = async (customerIden
   return items;
 };
 
-export const fetchSubscriptionContractById = async (id: string, { client }: Deps): Promise<SubscriptionContractResult> => {
+export const fetchSubscriptionContractById = async (id: string, { client }: Deps): Promise<EnrichedSubscriptionContract> => {
   const query = {
     subscriptionContract: {
       get: {
