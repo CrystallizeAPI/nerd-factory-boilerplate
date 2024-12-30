@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 import { createSubscriptionContractManager } from '@crystallize/js-api-client'
 import { container } from '@/core/container.server'
 
-export async function subscribe(prevState: unknown, form: FormData) {
+export async function subscribeAction(prevState: unknown, form: FormData) {
     const cookieStore = await cookies()
     const token = cookieStore.get('auth.token')?.value
     try {
@@ -31,7 +31,7 @@ export async function subscribe(prevState: unknown, form: FormData) {
         inThreeDays.setDate(inThreeDays.getDate() + 3)
         inThreeDays.setHours(23, 59, 59, 999)
         const { recurring, initial, ...rest } = template
-        const contract = await manager.create({
+        await manager.create({
             ...rest,
             ...(initial ? { initial } : {}),
             recurring,
@@ -44,7 +44,6 @@ export async function subscribe(prevState: unknown, form: FormData) {
                 renewAt: inThreeDays,
             }
         });
-        console.log({ contract }, { depth: null })
     } catch (exception) {
         console.error(exception)
         redirect('/login')

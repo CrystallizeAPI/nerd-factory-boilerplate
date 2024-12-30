@@ -68,6 +68,13 @@ query GET_CREATED_ORDER_DETAILS($id: ID!) {
         gross
         net
       }
+      pipelines {
+        pipeline {
+          id
+          name
+        }
+        stageId
+      }
     }
   }
 }

@@ -8,5 +8,16 @@ const crystallizeClient = createClient({
 });
 
 export const container = {
-    crystallizeClient
+    crystallizeClient,
+    pipelines: {
+        paymentFlow: {
+            id: '6772fe8bbb3f753d1601d885',
+            stages: {
+                toCapture: '6772fe8bbb3f753d1601d881',
+                processing: '6772fe8bbb3f753d1601d882',
+                success: '6772fe8bbb3f753d1601d884',
+                failed: '6772fe8bbb3f753d1601d883'
+            }
+        }
+    }
 }

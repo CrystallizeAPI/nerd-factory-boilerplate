@@ -1,6 +1,6 @@
 'use client';
 
-import { subscribe } from '@/actions/subscribe.action';
+import { subscribeAction } from '@/actions/subscribe.action';
 import { useActionState } from 'react';
 
 type SubscriptionContractIntent = {
@@ -23,7 +23,7 @@ type SubscriptionContractIntent = {
 
 
 export function SubscriptionContractIntentForm(intent: SubscriptionContractIntent) {
-    const [state, action, pending] = useActionState(subscribe, null)
+    const [state, action, pending] = useActionState(subscribeAction, null)
 
     const { plan, period, priceVariant, sku, path } = intent
     return <form action={action} key={plan.identifier + period.id + priceVariant.identifier}>
@@ -33,7 +33,7 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
         <input name='priceVariant' type='hidden' value={priceVariant.identifier} />
         <input name='plan' type='hidden' value={plan.identifier} />
         <input name='period' type='hidden' value={period.id} />
-        <button className='p-2 bg-amber-200 text-black rounded-lg w-80' type='submit'>
+        <button className='p-2 bg-amber-200 text-black rounded-lg w-80' type='submit' disabled={pending}>
             {plan.name} ({period.name})<br />{priceVariant.name} ({priceVariant.currency})<br />
             <small>{pending ? 'Contract is being created' : 'Subscribe!'}</small>
         </button>

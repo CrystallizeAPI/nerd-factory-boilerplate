@@ -1,6 +1,6 @@
 query GET_ORDER_IN_PIPELINE_DETAILS($orderId: ID!, $pipelineId: ID!) {
   order {
-    get(id: $id) {
+    get(id: $orderId) {
       id
       createdAt
       updatedAt
@@ -67,6 +67,13 @@ query GET_ORDER_IN_PIPELINE_DETAILS($orderId: ID!, $pipelineId: ID!) {
         currency
         gross
         net
+      }
+      pipelines {
+        pipeline {
+          id
+          name
+        }
+        stageId
       }
     }
   }
