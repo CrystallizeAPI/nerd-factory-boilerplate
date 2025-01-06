@@ -1,109 +1,109 @@
 query GET_SUBSCRIPTION($id: ID!) {
-  subscriptionContract {
-    get(id: $id) {
-      id
-      tenantId
-      subscriptionPlan {
-        name
-        identifier
-        meteredVariables {
-          id
-          identifier
-          name
-          unit
+    subscriptionContract {
+        get(id: $id) {
+            id
+            tenantId
+            subscriptionPlan {
+                name
+                identifier
+                meteredVariables {
+                    id
+                    identifier
+                    name
+                    unit
+                }
+            }
+            item {
+                name
+                sku
+            }
+            payment {
+                ... on CustomPayment {
+                    properties {
+                        property
+                        value
+                    }
+                }
+            }
+            meta {
+                key
+                value
+            }
+            initial {
+                period
+                unit
+                price
+                currency
+                meteredVariables {
+                    id
+                    name
+                    identifier
+                    unit
+                    tierType
+                    tiers {
+                        currency
+                        price
+                        threshold
+                    }
+                }
+            }
+            recurring {
+                period
+                unit
+                price
+                currency
+                meteredVariables {
+                    id
+                    name
+                    identifier
+                    unit
+                    tierType
+                    tiers {
+                        currency
+                        price
+                        threshold
+                    }
+                }
+            }
+            status {
+                renewAt
+                activeUntil
+                price
+                currency
+            }
+            customerIdentifier
+            customer {
+                identifier
+                email
+                firstName
+                lastName
+                companyName
+                phone
+                taxNumber
+                meta {
+                    key
+                    value
+                }
+                externalReferences {
+                    key
+                    value
+                }
+                addresses {
+                    type
+                    lastName
+                    firstName
+                    email
+                    middleName
+                    street
+                    street2
+                    city
+                    country
+                    state
+                    postalCode
+                    phone
+                    streetNumber
+                }
+            }
         }
-      }
-      item {
-        name
-        sku
-      }
-      payment {
-        ... on CustomPayment {
-          properties {
-            property
-            value
-          }
-        }
-      }
-      meta {
-        key
-        value
-      }
-      initial {
-        period
-        unit
-        price
-        currency
-        meteredVariables {
-          id
-          name
-          identifier
-          unit
-          tierType
-          tiers {
-            currency
-            price
-            threshold
-          }
-        }
-      }
-      recurring {
-        period
-        unit
-        price
-        currency
-        meteredVariables {
-          id
-          name
-          identifier
-          unit
-          tierType
-          tiers {
-            currency
-            price
-            threshold
-          }
-        }
-      }
-      status {
-        renewAt
-        activeUntil
-        price
-        currency
-      }
-      customerIdentifier
-      customer {
-        identifier
-        email
-        firstName
-        lastName
-        companyName
-        phone
-        taxNumber
-        meta {
-          key
-          value
-        }
-        externalReferences {
-          key
-          value
-        }
-        addresses {
-          type
-          lastName
-          firstName
-          email
-          middleName
-          street
-          street2
-          city
-          country
-          state
-          postalCode
-          phone
-          streetNumber
-        }
-      }
     }
-  }
 }

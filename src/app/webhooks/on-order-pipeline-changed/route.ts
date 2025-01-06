@@ -1,6 +1,6 @@
-import { container } from "@/core/container.server";
-import { Order, createOrderPaymentUpdater, createOrderPipelineStageSetter } from "@crystallize/js-api-client";
-import { NextResponse } from "next/server";
+import { container } from '@/core/container.server';
+import { Order, createOrderPaymentUpdater, createOrderPipelineStageSetter } from '@crystallize/js-api-client';
+import { NextResponse } from 'next/server';
 
 // @todo: Signature verifiacation
 export async function POST(request: Request) {
@@ -11,14 +11,16 @@ export async function POST(request: Request) {
     if (pipelineEvent.id !== container.pipelines.paymentFlow.id) {
         return new Response(`Unauthorized.`, { status: 401 });
     }
-    const orderPipelineStageId: string = body.order.get.pipelines.find((p: {
-        pipeline: {
-            id: string;
-        };
-        stageId: string;
-    }) => {
-        return p.pipeline.id === container.pipelines.paymentFlow.id;
-    })?.stageId
+    const orderPipelineStageId: string = body.order.get.pipelines.find(
+        (p: {
+            pipeline: {
+                id: string;
+            };
+            stageId: string;
+        }) => {
+            return p.pipeline.id === container.pipelines.paymentFlow.id;
+        },
+    )?.stageId;
 
     switch (orderPipelineStageId) {
         case container.pipelines.paymentFlow.stages.toCapture:
@@ -28,7 +30,7 @@ export async function POST(request: Request) {
             await orderPaymentUpdater(order.id, {
                 payment: [
                     {
-                        //@ts-ignore
+                        //@ts-expect-error - It's an enum in the API
                         provider: 'custom',
                         custom: {
                             properties: [
@@ -51,7 +53,7 @@ export async function POST(request: Request) {
                                 {
                                     property: 'via',
                                     value: 'OrderReCapture',
-                                }
+                                },
                             ],
                         },
                     },
@@ -61,7 +63,9 @@ export async function POST(request: Request) {
             await putOrderInPipelineStage(
                 order.id,
                 container.pipelines.paymentFlow.id,
-                paymentStatus === 'failed' ? container.pipelines.paymentFlow.stages.failed : container.pipelines.paymentFlow.stages.success,
+                paymentStatus === 'failed'
+                    ? container.pipelines.paymentFlow.stages.failed
+                    : container.pipelines.paymentFlow.stages.success,
             );
             return NextResponse.json({
                 orderId: order.id,
@@ -77,7 +81,6 @@ export async function POST(request: Request) {
             });
         }
         default:
-
     }
     return new Response(`Unauthorized.`, { status: 401 });
 }

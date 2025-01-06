@@ -1,4 +1,4 @@
-import { ClientInterface, createCustomerManager } from "@crystallize/js-api-client";
+import { ClientInterface, createCustomerManager } from '@crystallize/js-api-client';
 
 type CustomerSlim = {
     email: string;
@@ -9,14 +9,12 @@ type CustomerSlim = {
 
 type Deps = {
     client: ClientInterface;
-}
+};
 
-export const createCustomerIfNeeded = async ({
-    email,
-    firstName,
-    lastName,
-    companyName
-}: CustomerSlim, { client }: Deps) => {
+export const createCustomerIfNeeded = async (
+    { email, firstName, lastName, companyName }: CustomerSlim,
+    { client }: Deps,
+) => {
     try {
         const manager = createCustomerManager(client);
         await manager.create({
@@ -27,11 +25,11 @@ export const createCustomerIfNeeded = async ({
             email,
         });
     } catch (exception) {
-        console.error(exception)
+        console.error(exception);
         // we save a get + test by catching the exception and do nothing here
         const message = (exception as Error).message;
         if (!message.includes('Customer with')) {
             throw exception;
         }
     }
-}
+};

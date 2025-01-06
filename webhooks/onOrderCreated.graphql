@@ -1,80 +1,80 @@
 query GET_CREATED_ORDER_DETAILS($id: ID!) {
-  order {
-    get(id: $id) {
-      id
-      createdAt
-      updatedAt
-      meta {
-        key
-        value
-      }
-      cart {
-        subscriptionContractId
-        subscription {
-          name
-          period
-          unit
-          start
-          end
-          meteredVariables {
+    order {
+        get(id: $id) {
             id
-            price
-            usage
-          }
+            createdAt
+            updatedAt
+            meta {
+                key
+                value
+            }
+            cart {
+                subscriptionContractId
+                subscription {
+                    name
+                    period
+                    unit
+                    start
+                    end
+                    meteredVariables {
+                        id
+                        price
+                        usage
+                    }
+                }
+            }
+            payment {
+                ... on CustomPayment {
+                    properties {
+                        property
+                        value
+                    }
+                }
+            }
+            customer {
+                identifier
+                email
+                firstName
+                lastName
+                taxNumber
+                companyName
+                phone
+                meta {
+                    key
+                    value
+                }
+                externalReferences {
+                    key
+                    value
+                }
+                addresses {
+                    type
+                    lastName
+                    firstName
+                    email
+                    middleName
+                    street
+                    street2
+                    city
+                    country
+                    state
+                    postalCode
+                    phone
+                    streetNumber
+                }
+            }
+            total {
+                currency
+                gross
+                net
+            }
+            pipelines {
+                pipeline {
+                    id
+                    name
+                }
+                stageId
+            }
         }
-      }
-      payment {
-        ... on CustomPayment {
-          properties {
-            property
-            value
-          }
-        }
-      }
-      customer {
-        identifier
-        email
-        firstName
-        lastName
-        taxNumber
-        companyName
-        phone
-        meta {
-          key
-          value
-        }
-        externalReferences {
-          key
-          value
-        }
-        addresses {
-          type
-          lastName
-          firstName
-          email
-          middleName
-          street
-          street2
-          city
-          country
-          state
-          postalCode
-          phone
-          streetNumber
-        }
-      }
-      total {
-        currency
-        gross
-        net
-      }
-      pipelines {
-        pipeline {
-          id
-          name
-        }
-        stageId
-      }
     }
-  }
 }

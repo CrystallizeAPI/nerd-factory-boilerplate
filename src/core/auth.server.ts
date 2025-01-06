@@ -9,9 +9,10 @@ export const createToken = async (email: string) => {
         .setExpirationTime('1w')
         .sign(new TextEncoder().encode(process.env.AUTH_SECRET));
     return token;
-
-}
+};
 
 export const decodeToken = async (token: string): Promise<JWTPayload & { email: string }> => {
-    return (await jwtVerify(token, new TextEncoder().encode(process.env.AUTH_SECRET))).payload as JWTPayload & { email: string };
-}
+    return (await jwtVerify(token, new TextEncoder().encode(process.env.AUTH_SECRET))).payload as JWTPayload & {
+        email: string;
+    };
+};

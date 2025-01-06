@@ -1,6 +1,6 @@
-import { container } from "@/core/container.server";
-import { Order, createOrderPaymentUpdater, createOrderPipelineStageSetter } from "@crystallize/js-api-client";
-import { NextResponse } from "next/server";
+import { container } from '@/core/container.server';
+import { Order, createOrderPaymentUpdater, createOrderPipelineStageSetter } from '@crystallize/js-api-client';
+import { NextResponse } from 'next/server';
 
 // @todo: Signature verifiacation
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     await orderPaymentUpdater(order.id, {
         payment: [
             {
-                //@ts-ignore
+                //@ts-expect-error - It's an enum in the API
                 provider: 'custom',
                 custom: {
                     properties: [
@@ -37,16 +37,19 @@ export async function POST(request: Request) {
                         {
                             property: 'via',
                             value: 'OrderCreated',
-                        }
+                        },
                     ],
                 },
             },
         ],
     });
 
-    await putOrderInPipelineStage(order.id,
+    await putOrderInPipelineStage(
+        order.id,
         container.pipelines.paymentFlow.id,
-        paymentStatus === 'failed' ? container.pipelines.paymentFlow.stages.failed : container.pipelines.paymentFlow.stages.success,
+        paymentStatus === 'failed'
+            ? container.pipelines.paymentFlow.stages.failed
+            : container.pipelines.paymentFlow.stages.success,
     );
 
     return NextResponse.json({
