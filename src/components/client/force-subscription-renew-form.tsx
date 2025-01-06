@@ -1,11 +1,11 @@
 'use client';
 
 import { forceSubscriptionContractRenewAction } from '@/actions/force-subscription-contract-renew.action';
-import { EnrichedSubscriptionContract } from '@/core/fetch-user-subscriptions.server';
+import { SubscriptionContract } from '@crystallize/js-api-client';
 import { useActionState } from 'react';
 
 
-export function ForceSubscriptionContractRenewIntentForm(contract: EnrichedSubscriptionContract) {
+export function ForceSubscriptionContractRenewIntentForm(contract: SubscriptionContract) {
     const [state, action, pending] = useActionState(forceSubscriptionContractRenewAction, null)
 
     const { id } = contract

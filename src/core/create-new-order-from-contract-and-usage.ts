@@ -1,19 +1,19 @@
-import { ClientInterface, CreateOrderInputRequest, createOrderPusher } from '@crystallize/js-api-client'
-import { EnrichedSubscriptionContract } from './fetch-user-subscriptions.server'
+import { ClientInterface, CreateOrderInputRequest, createOrderPusher, SubscriptionContract } from '@crystallize/js-api-client'
 import { Bill } from './compute-subscription-contract-bill.server'
+import { removeNullValue } from './utils'
 
 type Deps = {
   client: ClientInterface
 }
 
 export const createNewOrderFromContractAndUsage = async (
-  contract: EnrichedSubscriptionContract,
+  contract: SubscriptionContract,
   bill: Bill,
   { client }: Deps,
 ) => {
   // we take the first currency of the grandtotal
   const netPrice = bill.price
-  const billingAddress = contract.customer.addresses.find((address) => address.type === 'billing')
+  const billingAddress = contract?.addresses?.find((address) => address.type.value === 'billing') || contract?.customer?.addresses?.find((address) => address.type.value === 'billing') || contract?.addresses?.[0] || contract?.customer?.addresses?.[0]
   const taxRate = billingAddress && billingAddress.country?.toLowerCase() === 'norway' ? 0.25 : 0
   const applyTax = (price: number) => {
     return price * (1 + taxRate)
@@ -33,9 +33,11 @@ export const createNewOrderFromContractAndUsage = async (
   const intent: CreateOrderInputRequest = {
     customer: {
       identifier: contract.customerIdentifier,
-      firstName: contract.customer.firstName,
-      lastName: contract.customer.lastName,
-      companyName: contract.customer.lastName,
+      ...(contract.customer && {
+        firstName: contract.customer.firstName,
+        lastName: contract.customer.lastName,
+        companyName: contract.customer.lastName,
+      }),
       addresses: [
         //@ts-ignore
         removeNullValue({
@@ -55,7 +57,7 @@ export const createNewOrderFromContractAndUsage = async (
         subscription: {
           name: contract.subscriptionPlan.name,
           period: bill.phase.period,
-          // @ts-ignore
+          //@ts-ignore
           unit: bill.phase.unit,
           start: bill.range.from,
           end: bill.range.to,
@@ -71,39 +73,9 @@ export const createNewOrderFromContractAndUsage = async (
       },
     ],
     total: price,
-    meta: [{ key: 'email', value: contract.customer.email }],
+    meta: [{ key: 'email', value: contract.customer?.email || contract.customerIdentifier }],
   }
   const orderPusher = createOrderPusher(client)
   return await orderPusher(intent)
 }
 
-
-const removeNullValue = <T>(obj: T): T | undefined => {
-  if (obj === null || obj === undefined) {
-    return undefined
-  }
-
-  if (Array.isArray(obj)) {
-    const filtered = obj.map(removeNullValue).filter((val) => val !== undefined)
-    return filtered.length === 0 ? ([] as T) : (filtered as unknown as T)
-  }
-
-  if (obj instanceof Date) {
-    return obj
-  }
-
-  if (typeof obj === 'object') {
-    const filtered: { [key: string]: unknown } = {}
-    let empty = true
-    for (const key in obj) {
-      const val = removeNullValue(obj[key])
-      if (val !== undefined) {
-        empty = false
-        filtered[key] = val
-      }
-    }
-    return empty ? undefined : (filtered as unknown as T)
-  }
-
-  return obj
-}

@@ -10,11 +10,6 @@ export type SubscriptionSlim = {
   variants: Array<{
     name: string
     sku: string
-    priceVariants: Array<{
-      identifier: string
-      price: number
-      currency: string
-    }>
     subscriptionPlans: Array<{
       identifier: string
       name: string
@@ -22,11 +17,12 @@ export type SubscriptionSlim = {
         name: string
         id: string
         recurring: {
-          priceVariants: Array<{
-            identifier: string
-            name: string
-            currency: string
-          }>
+          priceVariants: {
+            [identifier: string]: {
+              price: number
+              currency: string
+            }
+          }
         }
       }>
     }>
@@ -34,26 +30,22 @@ export type SubscriptionSlim = {
 }
 const QUERY = `#graphql
 {
-  catalogue(path: "/") {
-    children {
-      path
-      name
-      ... on Product {
+  browse {
+    product {
+      hits {
+        path
+        name
         variants {
           name
           sku
-        subscriptionPlans {
+          subscriptionPlans {
             identifier
             name
             periods {
-              name
               id
+              name
               recurring {
-                priceVariants {
-                  identifier
-                  name
-                  currency
-                }
+                priceVariants
               }
             }
           }
@@ -70,6 +62,8 @@ export const fetchSubscription = async (path: string, { client }: Deps): Promise
 }
 
 export const fetchSubscriptions = async ({ client }: Deps): Promise<SubscriptionSlim[]> => {
-  const subscriptions = await client.catalogueApi(QUERY)
-  return subscriptions.catalogue.children
+
+  // we can't pass feature flags yet to JS-API-Client
+  const subscriptions = await client.discoveryApi(QUERY)
+  return subscriptions.browse.product.hits
 }

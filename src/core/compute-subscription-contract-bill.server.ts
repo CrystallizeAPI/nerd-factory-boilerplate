@@ -1,15 +1,12 @@
-import { ClientInterface, pricesForUsageOnTier } from '@crystallize/js-api-client'
-import { fetchUsageOnContractForPeriod, Period } from './fetch-usage-on-contract-for-period.server'
-import { EnrichedPhase, EnrichedSubscriptionContract } from './fetch-user-subscriptions.server'
-import { periodForContract } from './period-for-contract.server'
-import { fetchCurrentPhaseForContract } from './fetch-current-phase-for-contract.server'
+import { ClientInterface, pricesForUsageOnTier, createSubscriptionContractManager, SubscriptionContract } from '@crystallize/js-api-client'
+import { Period, periodForContract } from './period-for-contract.server'
 
 type Deps = {
   client: ClientInterface
 }
 
 type Args = {
-  contract: EnrichedSubscriptionContract
+  contract: SubscriptionContract
   period?: Period['range']
 }
 
@@ -17,7 +14,7 @@ export type Bill = {
   price: number
   currency: string
   range: Period['range']
-  phase: EnrichedPhase,
+  phase: SubscriptionContract['recurring'],
   variables: Record<
     string,
     {
@@ -29,9 +26,10 @@ export type Bill = {
 }
 export const computeContractBill = async ({ contract, period }: Args, { client }: Deps): Promise<Bill> => {
   const range = period ?? periodForContract(contract).range
+  const manager = createSubscriptionContractManager(client)
   const [usage, phaseIdentifier] = await Promise.all([
-    fetchUsageOnContractForPeriod(contract.id, range, { client }),
-    fetchCurrentPhaseForContract(contract.id, { client })
+    manager.getUsageForPeriod(contract.id, range.from, range.to),
+    manager.getCurrentPhase(contract.id)
   ])
 
   const phase = contract[phaseIdentifier] || contract['recurring']

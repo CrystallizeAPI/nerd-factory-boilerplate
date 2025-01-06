@@ -2,9 +2,7 @@ import { ForceSubscriptionContractRenewIntentForm } from "@/components/client/fo
 import { TrackUsageOnSubscriptionIntentForm } from "@/components/client/track-usage-on-subscription-form";
 import { decodeToken } from "@/core/auth.server";
 import { container } from "@/core/container.server";
-import { EnrichedPhase, fetchSubscriptionContractByCustomerIdentifier } from "@/core/fetch-user-subscriptions.server";
-import { createOrderFetcher, Order } from "@crystallize/js-api-client";
-import { create } from "domain";
+import { createOrderFetcher, createSubscriptionContractManager, Order, SubscriptionContract } from "@crystallize/js-api-client";
 import { cookies } from "next/headers";
 
 export default async function MySubscriptions() {
@@ -13,8 +11,9 @@ export default async function MySubscriptions() {
     const token = cookieStore.get('auth.token')?.value
     const payload = await decodeToken(token || '')
     const orderFetcher = createOrderFetcher(container.crystallizeClient)
-    const [contracts, orderResults] = await Promise.all([
-        fetchSubscriptionContractByCustomerIdentifier(payload.email, { client: container.crystallizeClient }),
+    const subscriptionContractManager = createSubscriptionContractManager(container.crystallizeClient)
+    const [contractResults, orderResults] = await Promise.all([
+        subscriptionContractManager.fetchByCustomerIdentifier(payload.email),
         orderFetcher.byCustomerIdentifier(payload.email, undefined, undefined, {
             subscriptionContractId: true,
             subscription: {
@@ -43,7 +42,7 @@ export default async function MySubscriptions() {
                     <div>
                         <h2 className="text-xl">My Subscriptions</h2>
                         <ul>
-                            {contracts.map((contract) => {
+                            {contractResults.contracts.map((contract) => {
                                 return <li key={contract.id} className="p-4 border-2 border-gray-200 rounded-lg m-4">
                                     <div className="flex flex-row gap-2">
                                         <div className="border-r-2 pr-2">
@@ -135,7 +134,7 @@ export default async function MySubscriptions() {
 
 function Period({ title, phase }: {
     title: string
-    phase: EnrichedPhase
+    phase: SubscriptionContract['recurring']
 }
 ) {
     return <div className="">

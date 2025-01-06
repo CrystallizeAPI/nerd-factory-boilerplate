@@ -1,10 +1,18 @@
 import dayjs, { ManipulateType } from 'dayjs'
-import { EnrichedSubscriptionContract } from './fetch-user-subscriptions.server'
-import { Period } from './fetch-usage-on-contract-for-period.server'
+import { SubscriptionContract } from '@crystallize/js-api-client'
+
+export type Period = {
+  month: number
+  year: number
+  range: {
+    from: Date
+    to: Date
+  }
+}
 
 const isValidPeriodUnit = (unit: string): unit is ManipulateType => ['year', 'month', 'day'].includes(unit)
 
-export const periodForContract = (contract: EnrichedSubscriptionContract): Period => {
+export const periodForContract = (contract: SubscriptionContract): Period => {
   const renewAt = dayjs(contract.status.renewAt)
   const periodCount = contract.recurring.period
   const periodUnit = contract.recurring.unit;

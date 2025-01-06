@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@crystallize/js-api-client':
-        specifier: ^3.2.0
-        version: 3.2.0
+        specifier: ^4.1.0
+        version: 4.1.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -64,8 +64,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@crystallize/js-api-client@3.2.0':
-    resolution: {integrity: sha512-UdWoYNJ53mvzb0dM41e16xUmfb3ndbxBTm6CJdrxCYXsIoEHrnXVOa/ccL4JCuVHKyFyg0Ks6k+b16NKXOIwKA==}
+  '@crystallize/js-api-client@4.1.0':
+    resolution: {integrity: sha512-Ko2i79EuOhVav/GDq2Dr3Z13VjWahwt21IfOutW+2pJwvnOjqAHyokgxFf+ZnkySMnkDYnWIqhv1ST9x03SF2w==}
 
   '@emnapi/runtime@1.3.1':
     resolution: {integrity: sha512-kEBmG8KyqtxJZv+ygbEim+KCGtIq1fC22Ms3S4ziXmYKm8uyoLX0MHONVKwp+9opg390VaKRNt4a7A9NwmpNhw==}
@@ -1700,7 +1700,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@crystallize/js-api-client@3.2.0':
+  '@crystallize/js-api-client@4.1.0':
     dependencies:
       dotenv: 16.4.7
       json-to-graphql-query: 2.3.0

@@ -39,14 +39,18 @@ function Variants({ subscription }: SubscriptionVariantsProps) {
                 <div className='flex flex-col gap-2 items-center justify-center'>
                     {variant.subscriptionPlans.flatMap((plan) => {
                         return plan.periods.flatMap((period) => {
-                            const priceVariant = period.recurring.priceVariants;
-                            return priceVariant.map((priceVariant) => {
+                            const priceVariants = period.recurring.priceVariants;
+                            return Object.keys(priceVariants).map((priceVariantIdentifier) => {
                                 return <SubscriptionContractIntentForm
-                                    key={priceVariant.identifier}
+                                    key={priceVariantIdentifier}
                                     path={subscription.path}
                                     period={period}
                                     plan={plan}
-                                    priceVariant={priceVariant}
+                                    priceVariant={{
+                                        currency: priceVariants[priceVariantIdentifier].currency,
+                                        identifier: priceVariantIdentifier,
+                                        name: priceVariantIdentifier,
+                                    }}
                                     sku={variant.sku}
                                 />
                             })

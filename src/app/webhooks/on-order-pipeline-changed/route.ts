@@ -1,6 +1,5 @@
 import { container } from "@/core/container.server";
-import { putOrderInPipelineStage } from "@/core/put-order-in-pipeline-stage.server";
-import { Order, createOrderPaymentUpdater } from "@crystallize/js-api-client";
+import { Order, createOrderPaymentUpdater, createOrderPipelineStageSetter } from "@crystallize/js-api-client";
 import { NextResponse } from "next/server";
 
 // @todo: Signature verifiacation
@@ -24,6 +23,7 @@ export async function POST(request: Request) {
     switch (orderPipelineStageId) {
         case container.pipelines.paymentFlow.stages.toCapture:
             const orderPaymentUpdater = createOrderPaymentUpdater(container.crystallizeClient);
+            const putOrderInPipelineStage = createOrderPipelineStageSetter(container.crystallizeClient);
             const paymentStatus = Math.random() > 0.3 ? 'success' : 'failed';
             await orderPaymentUpdater(order.id, {
                 payment: [
@@ -58,12 +58,11 @@ export async function POST(request: Request) {
                 ],
             });
 
-            await putOrderInPipelineStage({
-                orderId: order.id,
-                pipelineId: container.pipelines.paymentFlow.id,
-                stageId: paymentStatus === 'failed' ? container.pipelines.paymentFlow.stages.failed : container.pipelines.paymentFlow.stages.success,
-            }, { client: container.crystallizeClient });
-
+            await putOrderInPipelineStage(
+                order.id,
+                container.pipelines.paymentFlow.id,
+                paymentStatus === 'failed' ? container.pipelines.paymentFlow.stages.failed : container.pipelines.paymentFlow.stages.success,
+            );
             return NextResponse.json({
                 orderId: order.id,
                 status: paymentStatus,

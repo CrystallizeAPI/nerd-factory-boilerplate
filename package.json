@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@crystallize/js-api-client": "^3.2.0",
+    "@crystallize/js-api-client": "^4.1.0",
     "dayjs": "^1.11.13",
     "jose": "^5.9.6",
     "json-to-graphql-query": "^2.3.0",

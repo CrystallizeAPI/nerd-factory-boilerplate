@@ -1,11 +1,11 @@
 'use client';
 
-import { EnrichedSubscriptionContract } from '@/core/fetch-user-subscriptions.server';
 import { useActionState } from 'react';
 import { trackUsageOnSubscriptionContractAction } from '@/actions/track-usage-on-subscription-contract.action';
+import { SubscriptionContract } from '@crystallize/js-api-client';
 
 
-export function TrackUsageOnSubscriptionIntentForm(contract: EnrichedSubscriptionContract) {
+export function TrackUsageOnSubscriptionIntentForm(contract: SubscriptionContract) {
     const [state, action, pending] = useActionState(trackUsageOnSubscriptionContractAction, null)
     const { id } = contract
 
