@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import { retrieveMeData } from '@/core/di.server';
 
 export default async function WelcomeUser() {
     // await new Promise((resolve) => setTimeout(resolve, 10000))
@@ -16,9 +17,13 @@ export default async function WelcomeUser() {
         );
     const payload = token.split('.')[1];
     const { email } = JSON.parse(atob(payload));
+    const me = await retrieveMeData(email);
+
     return (
         <div className="p-3 text-white float-right bg-slate-800 rounded-lg m-2">
-            <Link href={'/my/subscriptions'}>Welcome {email}</Link>
+            <Link href={'/my/subscriptions'}>
+                Welcome {me.firstName} {me.lastName}
+            </Link>
         </div>
     );
 }

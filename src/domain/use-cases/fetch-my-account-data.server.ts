@@ -1,16 +1,18 @@
-import { createOrderFetcher, createSubscriptionContractManager, Order } from '@crystallize/js-api-client';
+import { createOrderFetcher, createSubscriptionContractManager, Customer, Order } from '@crystallize/js-api-client';
 
 type Deps = {
     subscriptionContractManager: ReturnType<typeof createSubscriptionContractManager>;
     orderManager: {
         fetch: ReturnType<typeof createOrderFetcher>;
     };
+    retrieveMeData: (identifier: string) => Promise<Customer>;
 };
 
 export const createMyAccountPageDataFetcher =
-    ({ subscriptionContractManager, orderManager }: Deps) =>
+    ({ subscriptionContractManager, orderManager, retrieveMeData }: Deps) =>
     async (email: string) => {
-        const [contractResults, orderResults] = await Promise.all([
+        const [me, contractResults, orderResults] = await Promise.all([
+            retrieveMeData(email),
             subscriptionContractManager.fetchByCustomerIdentifier(email),
             orderManager.fetch.byCustomerIdentifier(
                 email,
@@ -42,5 +44,6 @@ export const createMyAccountPageDataFetcher =
         return {
             orders,
             contracts,
+            me,
         };
     };

@@ -9,8 +9,7 @@ export default async function MySubscriptions() {
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
     const payload = await authenticator.decodeToken(token || '');
-    const { orders, contracts } = await fetchMyAccountData(payload.email);
-
+    const { orders, contracts, me } = await fetchMyAccountData(payload.email);
     const openOrCloseSubscriptionContracts = contracts?.length < 3;
 
     return (
@@ -42,14 +41,23 @@ export default async function MySubscriptions() {
                     <div className="col-span-3 ">
                         <h2 className="text-sm font-bold text-black mb-2">Profile</h2>
                         <div className="flex flex-col gap-4">
-                            <p>Didrik Englund Hegna</p>
                             <p>
-                                40 61 23 45 <br />
-                                didrik@crystallize.com
+                                {me.firstName} {me.lastName}
                             </p>
+                            {me.companyName && <p>{me.companyName}</p>}
                             <p>
-                                Borgeåsvegen 8, <br /> 3910 Porsgrunn, <br /> Norway
+                                {me.phone} <br />
+                                {me.email}
                             </p>
+                            {me.addresses?.[0] && (
+                                <p>
+                                    {' '}
+                                    {me.addresses[0].firstName} {me.addresses[0].lastName} <br />
+                                    {me.addresses[0].streetNumber} {me.addresses[0].street} {me.addresses[0].street2} ,{' '}
+                                    <br /> {me.addresses[0].postalCode} {me.addresses[0].city}, <br />{' '}
+                                    {me.addresses[0].country}
+                                </p>
+                            )}
                         </div>
                         <div className="inline-flex flex-col gap-4 mt-8">
                             <Link

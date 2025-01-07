@@ -17,6 +17,7 @@ import { createSubscriber } from '@/domain/use-cases/subscribe-to-suscription.se
 import { createMyAccountPageDataFetcher } from '@/domain/use-cases/fetch-my-account-data.server';
 import { createOrderPaymentStatusUpdater } from '@/domain/use-cases/update-order-payment-status.server';
 import { createOrderPipelineChangeHandler } from '@/domain/use-cases/handle-order-pipeline-change.server';
+import { createMeDataRetriever } from '@/domain/use-cases/retrieve-me-data.server';
 
 const crystallizeClient = createClient(
     {
@@ -66,6 +67,7 @@ type Container = {
     fetchMyAccountData: ReturnType<typeof createMyAccountPageDataFetcher>;
     updateOrderPaymentStatus: ReturnType<typeof createOrderPaymentStatusUpdater>;
     handlerOrderPipelineChange: ReturnType<typeof createOrderPipelineChangeHandler>;
+    retrieveMeData: ReturnType<typeof createMeDataRetriever>;
 };
 
 const container = createContainer<Container>({
@@ -101,6 +103,7 @@ container.register({
     fetchMyAccountData: asFunction(createMyAccountPageDataFetcher).singleton(),
     updateOrderPaymentStatus: asFunction(createOrderPaymentStatusUpdater).singleton(),
     handlerOrderPipelineChange: asFunction(createOrderPipelineChangeHandler).singleton(),
+    retrieveMeData: asFunction(createMeDataRetriever).singleton(),
 });
 
 const {
@@ -113,6 +116,7 @@ const {
     fetchMyAccountData,
     updateOrderPaymentStatus,
     handlerOrderPipelineChange,
+    retrieveMeData,
 } = container.cradle;
 
 export {
@@ -125,4 +129,5 @@ export {
     subscriptionFetcher,
     updateOrderPaymentStatus,
     handlerOrderPipelineChange,
+    retrieveMeData,
 };
