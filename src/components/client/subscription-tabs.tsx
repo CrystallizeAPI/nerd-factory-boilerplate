@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { SubscriptionSlim } from '@/core/fetch-subscriptions.server';
 import { clsx } from 'clsx';
 import { SubscriptionTabVariants } from '../subscription-tabs-variants';
+import { SubscriptionSlim } from '@/domain/contracts/subcription-slim';
 
 export const SubscriptionTabs = ({
     subscriptions,

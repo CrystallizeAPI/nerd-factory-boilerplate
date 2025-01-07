@@ -1,5 +1,4 @@
-import { container } from '@/core/container.server';
-import { fetchSubscription, fetchSubscriptions } from '@/core/fetch-subscriptions.server';
+import { subscriptionFetcher } from '@/core/di.server';
 import SubscriptionTabs from './client/subscription-tabs';
 
 type SubscriptionsProps = {
@@ -7,8 +6,8 @@ type SubscriptionsProps = {
 };
 export default async function Subscriptions({ path }: SubscriptionsProps) {
     const subscriptions = path
-        ? await fetchSubscription(path, { client: container.crystallizeClient })
-        : await fetchSubscriptions({ client: container.crystallizeClient });
+        ? await subscriptionFetcher.fetchSubscription(path)
+        : await subscriptionFetcher.fetchSubscriptions();
 
     return <SubscriptionTabs subscriptions={subscriptions} />;
 }

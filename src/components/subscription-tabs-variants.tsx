@@ -1,8 +1,8 @@
-import type { SubscriptionSlim } from '@/core/fetch-subscriptions.server';
 import { SubscriptionContractIntentForm } from './client/subscription-variants-form';
 import { ContentTransformer, Image } from '@crystallize/reactjs-components';
 import { priceFormatter } from './currency-formatter';
 import NextImage from 'next/image';
+import { SubscriptionSlim } from '@/domain/contracts/subcription-slim';
 
 type SubscriptionVariantsProps = {
     subscription: SubscriptionSlim;

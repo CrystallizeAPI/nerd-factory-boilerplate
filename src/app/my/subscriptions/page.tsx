@@ -1,6 +1,4 @@
-import { decodeToken } from '@/core/auth.server';
-import { container } from '@/core/container.server';
-import { createOrderFetcher, createSubscriptionContractManager, Order } from '@crystallize/js-api-client';
+import { authenticator, fetchMyAccountData } from '@/core/di.server';
 import { cookies } from 'next/headers';
 import { SubscriptionContract } from '../../../components/subscription-contract';
 
@@ -8,38 +6,9 @@ export default async function MySubscriptions() {
     // this could be put in a sub RSC and suspense to load faster
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
-    const payload = await decodeToken(token || '');
-    const orderFetcher = createOrderFetcher(container.crystallizeClient);
-    const subscriptionContractManager = createSubscriptionContractManager(container.crystallizeClient);
-    const [contractResults, orderResults] = await Promise.all([
-        subscriptionContractManager.fetchByCustomerIdentifier(payload.email),
-        orderFetcher.byCustomerIdentifier(
-            payload.email,
-            undefined,
-            undefined,
-            {
-                subscriptionContractId: true,
-                subscription: {
-                    start: true,
-                    end: true,
-                    name: true,
-                    period: true,
-                    unit: true,
-                    meteredVariables: {
-                        id: true,
-                        usage: true,
-                        price: true,
-                    },
-                },
-            },
-            {
-                reference: true,
-            },
-        ),
-    ]);
+    const payload = await authenticator.decodeToken(token || '');
+    const { orders, contracts } = await fetchMyAccountData(payload.email);
 
-    const orders = orderResults.orders as Array<Order & { reference: string }>;
-    const contracts = contractResults.contracts;
     return (
         <div className="grid grid-cols-12 px-12  max-w-screen-xl mx-auto ">
             <main className="flex flex-col col-span-9 gap-8 m items-center sm:items-start">
