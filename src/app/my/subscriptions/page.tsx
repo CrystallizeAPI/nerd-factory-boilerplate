@@ -67,13 +67,13 @@ export default async function MySubscriptions() {
                                 <Image src="/icon_edit.svg" alt="Pencil icon" width={25} height={25} />
                                 Edit profile
                             </Link>
-                            <Link
-                                href="/"
+                            <a
+                                href="/logout"
                                 className="bg-black/10 hover:border-black border border-transparent flex items-center gap-2 py-1 pl-2 pr-4 rounded-lg text-sm font-semibold"
                             >
                                 <Image src="/icon_sign_out.svg" alt="Left facing arrow" width={25} height={25} />
                                 Log out
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 </div>
