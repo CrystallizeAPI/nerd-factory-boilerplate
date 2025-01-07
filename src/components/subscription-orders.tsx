@@ -17,7 +17,6 @@ export const SubscriptionOrders = ({ order }: { order: Order & { reference: stri
 
             <ul className="bg-yellow  border-t border-black">
                 {order.cart.map((item) => {
-                    console.log({ item });
                     return (
                         <li key={item.sku} className="border-b border-black px-6">
                             <div className="flex">

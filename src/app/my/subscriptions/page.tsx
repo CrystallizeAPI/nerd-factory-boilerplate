@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { SubscriptionContract } from '../../../components/subscription-contract';
 import { SubscriptionOrders } from '../../../components/subscription-orders';
 import Link from 'next/link';
+import Image from 'next/image';
 export default async function MySubscriptions() {
     // this could be put in a sub RSC and suspense to load faster
     const cookieStore = await cookies();
@@ -55,14 +56,14 @@ export default async function MySubscriptions() {
                                 href="/"
                                 className="bg-black/10 hover:border-black border border-transparent flex items-center gap-2 py-1 pl-2 pr-4 rounded-lg text-sm font-semibold"
                             >
-                                <img src="/icon_edit.svg" alt="Pencil icon" />
+                                <Image src="/icon_edit.svg" alt="Pencil icon" width={25} height={25} />
                                 Edit profile
                             </Link>
                             <Link
                                 href="/"
-                                className="bg-black/10 inline hover:border-black border border-transparent flex items-center gap-2 py-1 pl-2 pr-4 rounded-lg text-sm font-semibold"
+                                className="bg-black/10 hover:border-black border border-transparent flex items-center gap-2 py-1 pl-2 pr-4 rounded-lg text-sm font-semibold"
                             >
-                                <img src="/icon_sign_out.svg" alt="Left facing arrow" />
+                                <Image src="/icon_sign_out.svg" alt="Left facing arrow" width={25} height={25} />
                                 Log out
                             </Link>
                         </div>
