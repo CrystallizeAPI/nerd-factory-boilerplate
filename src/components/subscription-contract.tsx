@@ -3,16 +3,23 @@ import { SubscriptionContract as SubscriptionContractType } from '@crystallize/j
 import Image from 'next/image';
 import { SubscriptionStatus } from './subscription-status';
 import { Period } from './subscription-period';
-
+import NextImage from 'next/image';
 const Statuses = ['active', 'initial', 'cancelled', 'paused'] as const;
 type StatusType = (typeof Statuses)[number];
 
-export const SubscriptionContract = ({ contract }: { contract: SubscriptionContractType }) => {
+export const SubscriptionContract = ({
+    contract,
+    openOrCloseSubscriptionContracts,
+}: {
+    contract: SubscriptionContractType;
+    openOrCloseSubscriptionContracts: boolean;
+}) => {
     const subscriptionStatus: StatusType = Statuses[(Math.random() * 4) | 0];
+
     return (
         <>
             <li className="block  border overflow-hidden border-black rounded-lg w-full">
-                <details open className="w-full block">
+                <details className="w-full block" open={openOrCloseSubscriptionContracts}>
                     <summary className="flex justify-between p-4">
                         <div className="flex gap-3 w-full">
                             <div className="w-13 shrink-0 aspect-square bg-yellow border border-black rounded-lg overflow-hidden relative p-1.5">
@@ -44,21 +51,38 @@ export const SubscriptionContract = ({ contract }: { contract: SubscriptionContr
                             </span>
                         </div>
                     </summary>
-                    <div className="py-8 bg-yellow border-0 border-t border-black">
+                    <div className="mx-4  flex justify-between items-center py-4 bg-white border-t border-black/15">
+                        <span className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                className="hover:bg-black/10 border border-transparent flex items-center gap-2 py-1 pl-2 pr-4 rounded-lg text-sm font-semibold"
+                            >
+                                <NextImage src="/icon_cancel.svg" alt="Cancel icon" width={24} height={24} />
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className=" hover:bg-black/10 border border-transparent flex items-center gap-2 py-1 pl-2 pr-4 rounded-lg text-sm font-semibold"
+                            >
+                                <NextImage src="/icon_stop.svg" alt="Pause icon" width={24} height={24} />
+                                Pause
+                            </button>
+                        </span>
+                        <span>
+                            <button
+                                type="button"
+                                className=" hover:bg-black/10 border border-transparent flex items-center gap-2 py-1 pl-2 pr-4 rounded-lg text-sm font-semibold"
+                            >
+                                <NextImage src="/icon_switch.svg" alt="Pause icon" width={24} height={24} />
+                                Switch plan
+                            </button>
+                        </span>
+                    </div>
+                    <div className="py-8 bg-yellow  border-t border-black">
                         <Period title="Recurring" phase={contract.recurring} />
-                        {/* {contract.initial && (
-              <div className="border-r-2 pr-2">
-                <Period title="Initial" phase={contract.initial} />
-              </div>
-            )} */}
                     </div>
                 </details>
             </li>
-
-            {/* <div className="flex justify-between items-center">
-        <TrackUsageOnSubscriptionIntentForm {...contract} />
-        <ForceSubscriptionContractRenewIntentForm {...contract} />
-      </div> */}
         </>
     );
 };

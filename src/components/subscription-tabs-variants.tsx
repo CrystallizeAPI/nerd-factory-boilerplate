@@ -19,12 +19,12 @@ export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsPr
                     <div className="px-12 py-12">
                         <div className="flex justify-between">
                             <div></div>
-                            <div className="w-10 aspect-square rounded-lg bg-yellow border border-black p-1 relative translate-x-6 -translate-y-6">
+                            <div className="[&_img]:object-contain [&_img]:w-full [&_img]:h-full w-10 aspect-square rounded-lg bg-yellow border border-black p-1 relative translate-x-6 -translate-y-6">
                                 <Image
                                     {...variant.firstImage}
                                     key={variant.firstImage.key}
                                     alt={variant.name}
-                                    className="object-fill w-full h-full"
+                                    className="w-full h-full"
                                 />
                             </div>
                         </div>
@@ -77,20 +77,20 @@ export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsPr
                     <div className="py-12 px-12 bg-yellow border-t border-black text-left">
                         <h4 className="font-semibold text-base">Essential Benefits</h4>
                         <ul className="flex flex-col gap-2 pt-4">
-                            <li className="flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={40} height={40} />
+                            <li className="relative flex items-center gap-2">
+                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
                                 All-in-one solution for work and play.
                             </li>
-                            <li className="flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={40} height={40} />
+                            <li className="relative flex items-center gap-2">
+                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
                                 Sync on just enough devices (exactly two).
                             </li>
-                            <li className="flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={40} height={40} />
+                            <li className="relative flex items-center gap-2">
+                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
                                 Support that’s there… eventually.
                             </li>
-                            <li className="flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={40} height={40} />
+                            <li className="relative flex items-center gap-2">
+                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
                                 Affordable monthly price.
                             </li>
                         </ul>
