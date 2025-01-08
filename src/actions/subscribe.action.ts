@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { authenticator, subscribe } from '@/core/di.server';
 
 export async function subscribeAction(prevState: unknown, form: FormData) {
+    let redirectTo = '/my/subscriptions';
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
     try {
@@ -12,17 +13,20 @@ export async function subscribeAction(prevState: unknown, form: FormData) {
         const sku = form.get('sku') as string;
         const customerIdentifier = payload.email;
         await subscribe({
-            path: form.get('path') as string,
-            sku,
-            customerIdentifier,
-            plan: form.get('plan') as string,
-            period: form.get('period') as string,
-            priceVariant: form.get('priceVariant') as string,
+            choice: {
+                path: form.get('path') as string,
+                sku,
+                plan: form.get('plan') as string,
+                period: form.get('period') as string,
+                priceVariant: form.get('priceVariant') as string,
+            },
             language: 'en',
+            customerIdentifier,
         });
     } catch (exception) {
         console.error(exception);
-        redirect('/login');
+        redirectTo = '/login';
     }
-    redirect('/my/subscriptions');
+    // redirect cannot be done in try-catch block... as internally it does throw.... Next.js black magick
+    redirect(redirectTo);
 }

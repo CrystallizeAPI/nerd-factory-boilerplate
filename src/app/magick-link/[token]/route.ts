@@ -3,6 +3,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function GET(request: Request, { params }: { params: Promise<{ token: string }> }) {
+    const url = new URL(request.url);
+    const redirectTo = url.searchParams.get('redirect') || '/';
     const token = (await params).token;
     try {
         const payload = await authenticator.decodeToken(token);
@@ -25,5 +27,5 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         // console.error(error)
         return new Response(`Unauthorized.`, { status: 401 });
     }
-    redirect('/');
+    redirect(redirectTo);
 }

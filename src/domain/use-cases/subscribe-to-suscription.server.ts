@@ -1,4 +1,5 @@
 import { ClientInterface, createSubscriptionContractManager } from '@crystallize/js-api-client';
+import { SubscriptionChoice } from '../contracts/subscription-choice';
 
 type Deps = {
     crystallizeClient: ClientInterface;
@@ -6,18 +7,15 @@ type Deps = {
 };
 
 type Args = {
-    path: string;
-    plan: string;
-    period: string;
-    priceVariant: string;
-    sku: string;
+    choice: SubscriptionChoice;
     language: string;
     customerIdentifier: string;
 };
 
 export const createSubscriber =
     ({ crystallizeClient, subscriptionContractManager }: Deps) =>
-    async ({ path, plan, period, priceVariant, sku, customerIdentifier, language }: Args) => {
+    async ({ choice, customerIdentifier, language }: Args) => {
+        const { path, plan, period, priceVariant, sku } = choice;
         const template = await subscriptionContractManager.createSubscriptionContractTemplateBasedOnVariantIdentity(
             path,
             {

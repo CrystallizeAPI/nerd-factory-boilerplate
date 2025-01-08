@@ -1,8 +1,10 @@
-import { SubscriptionContractIntentForm } from './client/subscription-variants-form';
 import { ContentTransformer, Image } from '@crystallize/reactjs-components';
 import { priceFormatter } from './currency-formatter';
 import NextImage from 'next/image';
 import { SubscriptionSlim } from '@/domain/contracts/subcription-slim';
+import Link from 'next/link';
+import { FORCED_PRICE_VARIANT, SubscriptionChoice } from '@/domain/contracts/subscription-choice';
+import { encodeBase64Url } from '@/core/utils';
 
 type SubscriptionVariantsProps = {
     subscription: SubscriptionSlim;
@@ -32,8 +34,14 @@ export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsPr
                         <div className="flex flex-col gap-2 justify-center">
                             {variant.subscriptionPlans.flatMap((plan) => {
                                 return plan.periods.flatMap((period) => {
-                                    const FORCED_PRICE_VARIANT = 'default';
                                     const priceVariant = period.recurring.priceVariants[FORCED_PRICE_VARIANT];
+                                    const choice: SubscriptionChoice = {
+                                        path: subscription.path,
+                                        plan: plan.identifier,
+                                        period: period.id,
+                                        priceVariant: FORCED_PRICE_VARIANT,
+                                        sku: variant.sku,
+                                    };
                                     return (
                                         <div key={subscription.path} className="w-full">
                                             <div className="flex gap-2 items-baseline justify-start">
@@ -55,18 +63,15 @@ export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsPr
                                                 <ContentTransformer json={variant.description} />
                                             </div>
                                             <div className="flex justify-items-start w-full py-4">
-                                                <SubscriptionContractIntentForm
-                                                    key={FORCED_PRICE_VARIANT}
-                                                    path={subscription.path}
-                                                    period={period}
-                                                    plan={plan}
-                                                    priceVariant={{
-                                                        identifier: FORCED_PRICE_VARIANT,
-                                                        name: 'Default',
-                                                        currency: priceVariant.currency,
-                                                    }}
-                                                    sku={variant.sku}
-                                                />
+                                                <Link
+                                                    className="py-2.5 bg-black rounded-lg px-12 text-base text-white hover:bg-black/90"
+                                                    prefetch={false}
+                                                    href={encodeURI(
+                                                        `/checkout/` + encodeBase64Url(JSON.stringify(choice)),
+                                                    )}
+                                                >
+                                                    Buy now
+                                                </Link>
                                             </div>
                                         </div>
                                     );

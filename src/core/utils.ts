@@ -27,3 +27,19 @@ export const removeNullValue = <T>(obj: T): T | undefined => {
 
     return obj;
 };
+
+export const encodeBase64Url = (string: string) => {
+    const encoded = btoa(string);
+    const urlSafeEncoded = encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    return urlSafeEncoded;
+};
+
+export const decodeBase64Url = (base64Url: string) => {
+    const base64 = base64Url
+        .replace(/-/g, '+')
+        .replace(/_/g, '/')
+        .padEnd(base64Url.length + ((4 - (base64Url.length % 4)) % 4), '=');
+
+    return atob(base64);
+};

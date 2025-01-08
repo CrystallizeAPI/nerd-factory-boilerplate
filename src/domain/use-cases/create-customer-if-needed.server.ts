@@ -18,10 +18,10 @@ export const createCustomerCreator =
                 email,
             });
         } catch (exception) {
-            console.error(exception);
             // we save a get + test by catching the exception and do nothing here
             const message = (exception as Error).message;
             if (!message.includes('Customer with')) {
+                console.error(exception);
                 throw exception;
             }
         }

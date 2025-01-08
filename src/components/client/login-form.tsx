@@ -2,9 +2,11 @@
 
 import { sendMagickLinkAction } from '@/actions/send-magick-link.action';
 import { useActionState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function LoginForm() {
+export default function LoginForm({ redirect }: { redirect?: string }) {
     const [link, action, pending] = useActionState(sendMagickLinkAction, null);
+    const searchParams = useSearchParams();
     return (
         <form className="flex flex-col gap-4 items-center" action={action}>
             <input
@@ -13,6 +15,7 @@ export default function LoginForm() {
                 placeholder="Email"
                 className="p-4 border text-black border-gray-300 rounded-lg w-80"
             />
+            <input name="redirect" type="hidden" value={searchParams.get('redirect') || redirect || '/'} />
             <button type="submit" className="p-4 bg-amber-200 text-black rounded-lg w-80" disabled={pending}>
                 Login
             </button>
