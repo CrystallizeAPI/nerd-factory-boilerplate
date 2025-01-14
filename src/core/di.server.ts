@@ -106,7 +106,7 @@ container.register({
     retrieveMeData: asFunction(createMeDataRetriever).singleton(),
 });
 
-const {
+export const {
     authenticator,
     computeContractBill,
     createCustomerIfNeeded,
@@ -118,16 +118,3 @@ const {
     handlerOrderPipelineChange,
     retrieveMeData,
 } = container.cradle;
-
-export {
-    authenticator,
-    fetchMyAccountData,
-    subscribe,
-    computeContractBill,
-    createCustomerIfNeeded,
-    createNewOrderFromContractAndUsage,
-    subscriptionFetcher,
-    updateOrderPaymentStatus,
-    handlerOrderPipelineChange,
-    retrieveMeData,
-};

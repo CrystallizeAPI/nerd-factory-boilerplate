@@ -4,10 +4,11 @@ import Image from 'next/image';
 import { SubscriptionStatus } from './subscription-status';
 import { Period } from './subscription-period';
 import NextImage from 'next/image';
+import { computeContractBill } from '@/core/di.server';
 const Statuses = ['active', 'initial', 'cancelled', 'paused'] as const;
 type StatusType = (typeof Statuses)[number];
 
-export const SubscriptionContract = ({
+export const SubscriptionContract = async ({
     contract,
     openOrCloseSubscriptionContracts,
 }: {
@@ -15,7 +16,7 @@ export const SubscriptionContract = ({
     openOrCloseSubscriptionContracts: boolean;
 }) => {
     const subscriptionStatus: StatusType = Statuses[(Math.random() * 4) | 0];
-
+    const bill = await computeContractBill({ contract });
     return (
         <>
             <li className="block  border overflow-hidden border-black rounded-lg w-full">
@@ -79,7 +80,7 @@ export const SubscriptionContract = ({
                         </span>
                     </div>
                     <div className="py-8 bg-yellow  border-t border-black">
-                        <Period title="Recurring" phase={contract.recurring} />
+                        <Period title="Recurring" phase={contract.recurring} bill={bill} />
                     </div>
                 </details>
             </li>

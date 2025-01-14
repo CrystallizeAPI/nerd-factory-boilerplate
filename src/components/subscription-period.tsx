@@ -1,18 +1,39 @@
-import { SubscriptionContract } from '@crystallize/js-api-client';
 import { priceFormatter } from './currency-formatter';
 import { clsx } from 'clsx';
+import { Bill } from '@/domain/contracts/bill';
 
-export function Period({ title, phase }: { title: string; phase: SubscriptionContract['recurring'] }) {
+type PeriodProps = {
+    title: string;
+    bill: Bill;
+};
+export function Period({ title, bill }: PeriodProps) {
     const dummyUsage = Math.floor(Math.random() * 30);
+    const phase = bill.phase;
     return (
         <div>
+            <div className="bg-gray-100 p-4">
+                <h4 className="font-semibold text-lg">Current period Bill</h4>
+                <p className="text-sm text-gray-500">
+                    From {bill.range.from.toDateString()} to {bill.range.to.toDateString()}
+                </p>
+                <p>
+                    {bill.price} {bill.currency}
+                </p>
+            </div>
             {phase.meteredVariables && (
                 <div title={title}>
                     {phase.meteredVariables.map((mv) => {
                         let totalCost = 2 * dummyUsage;
+                        const usage = bill.variables[mv.identifier].usage;
+                        const price = bill.variables[mv.identifier].price;
+
                         return (
                             <div key={mv.identifier} className="flex gap-4 px-6">
                                 <span className="text-sm font-semibold">{mv.name}</span>
+
+                                <div className="bg-gray-100 p-4">
+                                    {usage} {price}
+                                </div>
 
                                 {mv.tiers.map((tier, index) => {
                                     const nextTier = mv.tiers[index + 1];
