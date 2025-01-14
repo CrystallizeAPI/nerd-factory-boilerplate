@@ -19,3 +19,15 @@ body {
     background: var(--background);
     font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer base {
+    .input-group {
+        @apply flex flex-col border border-black border-b-0  overflow-hidden focus-within:bg-gray-50;
+    }
+    .input-label {
+        @apply pt-3 px-6 text-sm text-black/60   font-semibold;
+    }
+    .input-field {
+        @apply border-0 px-6 pb-3 pt-1 bg-transparent outline-none focus:ring-0 focus:ring-offset-0 font-semibold placeholder:font-normal placeholder:text-sm placeholder:italic;
+    }
+}

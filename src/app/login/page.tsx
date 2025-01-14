@@ -1,4 +1,4 @@
-import LoginForm from '@/components/client/login-form';
+import LoginForm from '@/components/client/login-register-form';
 
 export const revalidate = 60;
 

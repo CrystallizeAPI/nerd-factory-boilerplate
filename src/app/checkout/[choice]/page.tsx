@@ -1,10 +1,13 @@
-import LoginForm from '@/components/client/login-form';
+import LoginOrRegisterForm from '@/components/client/login-register-form';
 import { SubscriptionContractIntentForm } from '@/components/client/subscription-intent-form';
 import { retrieveMeData, subscriptionFetcher } from '@/core/di.server';
 import { decodeBase64Url } from '@/core/utils';
 import { FORCED_PRICE_VARIANT, SubscriptionChoiceSchema } from '@/domain/contracts/subscription-choice';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { priceFormatter } from '@/components/currency-formatter';
+import { CheckoutSteps } from '@/components/checkout-steps';
+import { Image } from '@crystallize/reactjs-components';
 
 export default async function CheckoutPage({ params }: { params: Promise<{ choice: string }> }) {
     const cookieStore = await cookies();
@@ -54,42 +57,65 @@ export default async function CheckoutPage({ params }: { params: Promise<{ choic
     }
 
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-                <h2 className="text-xl">Checkout</h2>
-
-                {me && (
-                    <SubscriptionContractIntentForm
-                        sku={variant.sku}
-                        path={choice.path}
-                        subscription={subscription}
-                        variant={variant}
-                        plan={plan}
-                        period={period}
-                        priceVariant={{
-                            ...priceVariant,
-                            identifier: FORCED_PRICE_VARIANT,
-                            name: 'Default',
-                        }}
-                        customer={me}
-                    />
-                )}
-
-                {!me && (
-                    <div>
-                        <legend>Subscription</legend>
-                        <p>
-                            {subscription.name} - {variant.name} - {plan.name} - {period.name}
-                        </p>
-                        <p>
-                            {priceVariant.currency} {priceVariant.price}
-                        </p>
-                        <hr />
-                        <p>Please login to continue</p>
-                        <LoginForm redirect={`/checkout/${choiceParam}`} />
+        <>
+            <div className="-mt-20 pt-20  bg-yellow">
+                <div className="block w-full  gap-24 row-start-2 items-center sm:items-start max-w-screen-md mx-auto ">
+                    <div className="flex flex-col gap-4 mb-24 tranform-y-20 top-10 relative">
+                        <legend className="font-bold text-black mb-1">Subscription cart</legend>
+                        <div className="flex justify-between border  bg-white border-black rounded-2xl py-3 px-4 gap-4 items-center">
+                            <div className="[&_img]:object-contain [&_img]:w-full [&_img]:h-full w-14 h-14 block  aspect-square rounded-xl bg-yellow border border-black p-2 relative ">
+                                <Image
+                                    {...variant.firstImage}
+                                    key={variant.firstImage.key}
+                                    alt={variant.name}
+                                    className="w-full h-full"
+                                />
+                            </div>
+                            <div className="w-full flex justify-between">
+                                <span>
+                                    <strong className="text-lg">{variant.name}</strong> <br />
+                                    <p className="text-sm text-black/60 font-medium">{variant.sku}</p>
+                                </span>
+                                <span>
+                                    <strong>{priceFormatter(priceVariant.currency, priceVariant.price)}</strong>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                )}
-            </main>
-        </div>
+                    <CheckoutSteps currentStep={me ? 'persona' : 'account'} />
+                </div>
+            </div>
+            <div className="px-8 pb-20 gap-16 ">
+                <div className="block w-full max-w-screen-md mx-auto ">
+                    <div className="">
+                        {me && (
+                            <div>
+                                <SubscriptionContractIntentForm
+                                    sku={variant.sku}
+                                    path={choice.path}
+                                    subscription={subscription}
+                                    variant={variant}
+                                    plan={plan}
+                                    period={period}
+                                    priceVariant={{
+                                        ...priceVariant,
+                                        identifier: FORCED_PRICE_VARIANT,
+                                        name: 'Default',
+                                    }}
+                                    customer={me}
+                                />
+                            </div>
+                        )}
+                        {!me && (
+                            <div>
+                                <div className="pt-20">
+                                    <LoginOrRegisterForm redirect={`/checkout/${choiceParam}`} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
