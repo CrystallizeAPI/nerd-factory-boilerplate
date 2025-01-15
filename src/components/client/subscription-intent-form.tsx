@@ -4,13 +4,15 @@ import { subscribeAction } from '@/actions/subscribe.action';
 import { encodeBase64Url } from '@/core/utils';
 import { SubscriptionChoice } from '@/domain/contracts/subscription-choice';
 import { SubscriptionContractIntent } from '@/domain/contracts/subscription-contract-intent';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
+import Image from 'next/image';
 
 import clsx from 'clsx';
 export function SubscriptionContractIntentForm(intent: SubscriptionContractIntent) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, action, pending] = useActionState(subscribeAction, null);
-    const { plan, period, priceVariant, sku, path, subscription, variant, customer } = intent;
+    const [paymentMethod, setPaymentMethod] = useState('coin');
+    const { plan, period, priceVariant, sku, path, customer } = intent;
     const choice: SubscriptionChoice = {
         path,
         plan: plan.identifier,
@@ -163,23 +165,80 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
                     />
                 </div>
             </fieldset>
-            <fieldset className="flex flex-col gap-4 mt-8">
-                <legend className="text-sm font-bold text-black mb-2">Payment</legend>
-                <div className="px-6 py-8 border rounded-2xl border-black">
-                    <p>
-                        Your Crystallize Wallet will be used! Careful payment work on 50% of the time. (so you can demo
-                        the pipeline)
-                    </p>
-                </div>
-            </fieldset>
 
-            <button
-                className="py-2.5 bg-black rounded-lg px-12 text-base text-white hover:bg-black/90"
-                type="submit"
-                disabled={pending}
-            >
-                {pending ? 'Contract is being created' : 'Buy now'}
-            </button>
+            <fieldset className="flex flex-col mt-8">
+                <legend className="text-sm font-bold text-black mb-2">Payment</legend>
+                <PaymentProvider
+                    title="Pay with Crystal Coin"
+                    logoUrl="/logo_crystalcoin.svg"
+                    identifier="coin"
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    pending={pending}
+                />
+                <PaymentProvider
+                    title="Pay with Crystal Card"
+                    logoUrl="/logo_crystalcard.svg"
+                    identifier="card"
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    pending={pending}
+                />
+            </fieldset>
         </form>
     );
 }
+
+const PaymentProvider = ({
+    title,
+    logoUrl,
+    identifier,
+    paymentMethod,
+    setPaymentMethod,
+    pending,
+}: {
+    title: string;
+    logoUrl: string;
+    identifier: string;
+    paymentMethod: string;
+    setPaymentMethod: (value: string) => void;
+    pending: boolean;
+}) => {
+    return (
+        <div
+            className="border rounded-t-2xl last:!rounded-t-none last:rounded-b-2xl first:border-b-0 last:border-t-0 border-black  gap-4  cursor-pointer hover:bg-gray-50 overflow-hidden"
+            onClick={() => setPaymentMethod(identifier)}
+        >
+            <div className="w-full border justify-between flex px-6 py-6">
+                <div className="flex gap-4 w-full">
+                    <span className="rounded-full border min-w-6 h-6 mt-0.5 border-black flex items-center justify-center">
+                        {paymentMethod === identifier && (
+                            <span className="h-3 w-3 bg-black rounded-full block relative" />
+                        )}
+                    </span>
+                    <h3 className="font-bold">
+                        {title}
+                        <small className="block font-medium text-sm">Your Crystallize wallet will be used</small>
+                    </h3>
+                </div>
+                <div>
+                    <Image src={logoUrl} alt="Crystal card logo" width={140} height={20} />
+                </div>
+            </div>
+            {paymentMethod === identifier && (
+                <div className="px-6 py-6 bg-yellow flex justify-between items-center">
+                    <p className="text-sm">
+                        <i>No real transactions will happen, this is just for demo purposes</i>
+                    </p>
+                    <button
+                        className="py-2.5 bg-black rounded-lg px-12 text-base text-white hover:bg-black/90"
+                        type="submit"
+                        disabled={pending}
+                    >
+                        {pending ? 'Processing...' : `Pay with ${identifier}`}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};

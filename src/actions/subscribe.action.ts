@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 import { authenticator, subscribe } from '@/core/di.server';
 
 export async function subscribeAction(prevState: unknown, form: FormData) {
-    let redirectTo = '/my/subscriptions';
+    let redirectTo = '/confirmation';
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
     try {

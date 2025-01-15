@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { SubscriptionContract as SubscriptionContractType } from '@crystallize/js-api-client';
+
 import Image from 'next/image';
 import { SubscriptionStatus } from './subscription-status';
 import { Period } from './subscription-period';
@@ -17,6 +18,7 @@ export const SubscriptionContract = async ({
 }) => {
     const subscriptionStatus: StatusType = Statuses[(Math.random() * 4) | 0];
     const bill = await computeContractBill({ contract });
+
     return (
         <>
             <li className="block  border overflow-hidden border-black rounded-lg w-full">
@@ -35,11 +37,13 @@ export const SubscriptionContract = async ({
                             </div>
                             <div className="">
                                 <h3 className="font-bold text-lg">{contract.item.name}</h3>
-                                <SubscriptionStatus />
+                                <SubscriptionStatus contract={contract} />
                             </div>
                         </div>
                         <div className="flex items-start justify-end gap-4 w-full">
-                            <p className="text-sm font-semibold text-black/60 pt-1">12.12.2024 - 12.01.2025</p>
+                            <p className="text-sm font-semibold text-black/60 pt-1">
+                                {bill.range.from.toDateString()} - {bill.range.to.toDateString()}
+                            </p>
                             <span
                                 className={clsx('font-bold  py-1 text-sm px-4 rounded', {
                                     'bg-green-300 text-green-800': subscriptionStatus === 'active',
@@ -52,7 +56,7 @@ export const SubscriptionContract = async ({
                             </span>
                         </div>
                     </summary>
-                    <div className="mx-4  flex justify-between items-center py-4 bg-white border-t border-black/15">
+                    <div className="mx-4  flex justify-between items-center py-4 bg-white border-t border-black/15 hidden">
                         <span className="flex items-center gap-2">
                             <button
                                 type="button"
@@ -79,7 +83,7 @@ export const SubscriptionContract = async ({
                             </button>
                         </span>
                     </div>
-                    <div className="py-8 bg-yellow  border-t border-black">
+                    <div className="bg-yellow  border-t border-black">
                         <Period title="Recurring" phase={contract.recurring} bill={bill} />
                     </div>
                 </details>

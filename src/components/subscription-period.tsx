@@ -6,34 +6,20 @@ type PeriodProps = {
     title: string;
     bill: Bill;
 };
-export function Period({ title, bill }: PeriodProps) {
-    const dummyUsage = Math.floor(Math.random() * 30);
+export function Period({ bill }: PeriodProps) {
     const phase = bill.phase;
+
     return (
         <div>
-            <div className="bg-gray-100 p-4">
-                <h4 className="font-semibold text-lg">Current period Bill</h4>
-                <p className="text-sm text-gray-500">
-                    From {bill.range.from.toDateString()} to {bill.range.to.toDateString()}
-                </p>
-                <p>
-                    {bill.price} {bill.currency}
-                </p>
-            </div>
             {phase.meteredVariables && (
-                <div title={title}>
+                <div>
                     {phase.meteredVariables.map((mv) => {
-                        let totalCost = 2 * dummyUsage;
                         const usage = bill.variables[mv.identifier].usage;
                         const price = bill.variables[mv.identifier].price;
 
                         return (
-                            <div key={mv.identifier} className="flex gap-4 px-6">
+                            <div key={mv.identifier} className="flex gap-4 px-6 pt-6 pb-4">
                                 <span className="text-sm font-semibold">{mv.name}</span>
-
-                                <div className="bg-gray-100 p-4">
-                                    {usage} {price}
-                                </div>
 
                                 {mv.tiers.map((tier, index) => {
                                     const nextTier = mv.tiers[index + 1];
@@ -45,7 +31,6 @@ export function Period({ title, bill }: PeriodProps) {
                                         : nextTier?.threshold - tier.threshold;
 
                                     if (onlyOneTier) {
-                                        totalCost = tier.price * dummyUsage;
                                         return (
                                             <div
                                                 key={`${mv.identifier}-${tier.threshold}`}
@@ -53,7 +38,7 @@ export function Period({ title, bill }: PeriodProps) {
                                             >
                                                 <div className="items-center gap-4 flex">
                                                     <span className="bg-black  w-auto h-6 px-2 flex items-center justify-center  text-white text-sm font-semibold rounded-lg">
-                                                        {dummyUsage} {mv.unit.toLowerCase()}
+                                                        {usage} {mv.unit.toLowerCase()}
                                                     </span>
                                                     <span className="text-sm font-semibold">
                                                         {priceFormatter(tier.currency, tier.price)} / per{' '}
@@ -67,7 +52,7 @@ export function Period({ title, bill }: PeriodProps) {
                                         <div
                                             key={`${mv.identifier}-${tier.threshold}`}
                                             className={clsx('w-full', {
-                                                'w-20 shrink-0': isLastTier && !onlyOneTier,
+                                                'max-w-24 ': isLastTier && !onlyOneTier,
                                             })}
                                         >
                                             <div className="justify-between flex mb-2">
@@ -81,25 +66,25 @@ export function Period({ title, bill }: PeriodProps) {
                                             </div>
                                             <span
                                                 className={clsx('w-full relative block bg-black/30 h-2 rounded', {
-                                                    '!bg-black': dummyUsage > nextTier?.threshold,
+                                                    '!bg-black': usage > nextTier?.threshold,
                                                 })}
                                             >
-                                                {dummyUsage > tier.threshold &&
-                                                    dummyUsage < (nextTier?.threshold || Infinity) && (
+                                                {usage > tier.threshold &&
+                                                    usage < (nextTier?.threshold || Infinity) && (
                                                         <>
                                                             <span
                                                                 className="bg-black absolute left-0 h-2 rounded-l"
                                                                 style={{
-                                                                    width: `${((dummyUsage - tier.threshold) / thresholdRange) * 100}%`,
+                                                                    width: `${((usage - tier.threshold) / thresholdRange) * 100}%`,
                                                                 }}
                                                             />
                                                             <span
                                                                 className="bg-black absolute w-6 h-6 top-1 -translate-y-1/2 flex items-center justify-center  text-white text-sm font-semibold rounded-full"
                                                                 style={{
-                                                                    left: `${((dummyUsage - tier.threshold) / thresholdRange) * 100}%`,
+                                                                    left: `${((usage - tier.threshold) / thresholdRange) * 100}%`,
                                                                 }}
                                                             >
-                                                                {dummyUsage}
+                                                                {usage}
                                                             </span>
                                                         </>
                                                     )}
@@ -108,19 +93,25 @@ export function Period({ title, bill }: PeriodProps) {
                                     );
                                 })}
                                 <div className="font-bold text-sm w-20 text-right  shrink-0 items-center flex justify-end">
-                                    +{priceFormatter('eur', totalCost)}
+                                    +{priceFormatter('eur', price)}
                                 </div>
                             </div>
                         );
                     })}
-                    <div className="border-t border-black mt-8 px-6">
+                    <div
+                        className={clsx('border-t border-black mt-8 px-6 pb-8', {
+                            '!mt-0 !border-0': phase.meteredVariables.length === 0,
+                        })}
+                    >
                         <div className="grid grid-cols-2 text-sm font-medium  gap-y-1 pt-4 right-0 max-w-[50%] w-full mr-0 ml-auto mt-4">
                             <span>Base cost</span>
-                            <span className="text-right font-bold">{priceFormatter('eur', 19)}</span>
+                            <span className="text-right font-bold">{priceFormatter('eur', phase.price)}</span>
                             <span>Metered cost</span>
-                            <span className="text-right font-bold">{priceFormatter('eur', 123)}</span>
+                            <span className="text-right font-bold">
+                                {priceFormatter('eur', bill.price - phase.price)}
+                            </span>
                             <span>Current total for period</span>
-                            <span className="text-right font-bold">{priceFormatter('eur', 123 + 19)}</span>
+                            <span className="text-right font-bold">{priceFormatter('eur', bill.price)}</span>
                         </div>
                     </div>
                 </div>

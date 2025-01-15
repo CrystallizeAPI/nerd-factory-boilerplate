@@ -50,7 +50,6 @@ export const createContractBillComputer =
         const phase = contract[phaseIdentifier] || contract['recurring'];
         const currency = phase.currency;
         const basePrice = phase.price;
-
         const priceUsage = phase.meteredVariables?.reduce(
             (
                 memo: {
@@ -96,5 +95,6 @@ export const createContractBillComputer =
             range,
             variables: priceUsage.variables,
             phase,
+            phaseIdentifier,
         };
     };

@@ -21,14 +21,15 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={manrope.className}>
-                <header className="flex justify-between items-center p-4">
-                    <div />
+                <header className="flex justify-center items-center p-4 relative">
                     <Link href="/">
                         <Image src="/logo.svg" alt="NerdFactory logo" width={226} height={43} />
                     </Link>
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <WelcomeUser />
-                    </Suspense>
+                    <div className="absolute right-4">
+                        <Suspense fallback={<p>Loading...</p>}>
+                            <WelcomeUser />
+                        </Suspense>
+                    </div>
                 </header>
 
                 {children}

@@ -20,11 +20,11 @@ export default async function MySubscriptions() {
                     <div className="col-span-9">
                         <h2 className="text-sm font-bold text-black mb-2">Subscriptions</h2>
                         <ul className=" w-full grid gap-4">
-                            {contracts.map((contract) => {
+                            {contracts.map((contract, index) => {
                                 return (
                                     <SubscriptionContract
                                         contract={contract}
-                                        key={contract.id}
+                                        key={`${contract.id}-${index}`}
                                         openOrCloseSubscriptionContracts={openOrCloseSubscriptionContracts}
                                     />
                                 );
