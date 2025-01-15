@@ -13,9 +13,6 @@ export const SubscriptionTabs = ({
     const [currentSubscription, setCurrentSubscription] = useState<SubscriptionSlim | undefined>(
         subscriptions ? (Array.isArray(subscriptions) ? subscriptions[0] : subscriptions) : undefined,
     );
-
-    console.log({ currentSubscription });
-
     if (Array.isArray(subscriptions)) {
         return (
             <>

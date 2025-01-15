@@ -11,7 +11,6 @@ type SubscriptionVariantsProps = {
 };
 
 export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsProps) {
-    console.log({ subscription });
     return (
         <ul className="flex gap-12 py-12 justify-center items-stretch">
             {subscription.variants.map((variant) => (

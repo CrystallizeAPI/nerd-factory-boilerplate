@@ -56,7 +56,7 @@ export const SubscriptionContract = async ({
                             </span>
                         </div>
                     </summary>
-                    <div className="mx-4  flex justify-between items-center py-4 bg-white border-t border-black/15 hidden">
+                    <div className="mx-4 flex justify-between items-center py-4 bg-white border-t border-black/15 hidden">
                         <span className="flex items-center gap-2">
                             <button
                                 type="button"
@@ -84,7 +84,7 @@ export const SubscriptionContract = async ({
                         </span>
                     </div>
                     <div className="bg-yellow  border-t border-black">
-                        <Period title="Recurring" phase={contract.recurring} bill={bill} />
+                        <Period title="Recurring" bill={bill} />
                     </div>
                 </details>
             </li>

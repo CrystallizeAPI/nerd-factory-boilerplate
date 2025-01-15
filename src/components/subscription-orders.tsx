@@ -17,7 +17,6 @@ export const SubscriptionOrders = ({ order }: { order: Order & { reference: stri
 
             <ul className="bg-yellow  border-t border-black">
                 {order.cart.map((item, index) => {
-                    console.log({ item });
                     return (
                         <li key={`${order.id}-${item.sku}-${index}`} className="py-2 px-6">
                             <div className="flex justify-between">
@@ -70,7 +69,6 @@ export const SubscriptionOrders = ({ order }: { order: Order & { reference: stri
                                                 <div>Price</div>
                                             </div>
                                             {item.subscription.meteredVariables.map((mv) => {
-                                                console.log({ mv });
                                                 return (
                                                     <div key={mv.id} className="py-2 w-full grid-cols-3 grid gap-2 m">
                                                         <div>{mv.id}</div>

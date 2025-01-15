@@ -3,8 +3,6 @@ import { cookies } from 'next/headers';
 import { retrieveMeData } from '@/core/di.server';
 import Image from 'next/image';
 
-export const revalidate = 60;
-
 export default async function ConfirmationPage() {
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
@@ -18,8 +16,8 @@ export default async function ConfirmationPage() {
         <div className="max-w-screen-xl mx-auto px-12 py-24 text-center flex justify-center items-center flex-col">
             <h1 className="text-6xl font-black text-black pb-6">Thank you, {me?.firstName}</h1>
             <p className="text-xl text-black max-w-screen-md mx-auto text-balance pb-12">
-                Thank you for subscribing to NerdFactory! You’re now part of our creative and tech-savvy community. Stay
-                tuned for updates, exclusive content, and the latest innovations straight to your inbox.
+                Thank you for subscribing to NerdFactory! You&apos;re now part of our creative and tech-savvy community.
+                Stay tuned for updates, exclusive content, and the latest innovations straight to your inbox.
             </p>
             <Link
                 href="/my/subscriptions"

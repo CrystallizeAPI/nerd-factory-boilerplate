@@ -6,6 +6,7 @@ export type Bill = {
     currency: string;
     range: Period['range'];
     phase: SubscriptionContract['recurring'];
+    phaseIdentifier: string;
     variables: Record<
         string,
         {
