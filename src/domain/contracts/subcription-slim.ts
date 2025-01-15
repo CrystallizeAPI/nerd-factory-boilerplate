@@ -31,10 +31,20 @@ type Phase = {
 export type SubscriptionSlim = {
     name: string;
     path: string;
+    description: RichTextContent['json'];
+    component_name: string;
     variants: Array<{
         name: string;
         sku: string;
         description: RichTextContent['json'];
+        usp: Array<{
+            uniqueBenefits: {
+                header: string;
+                benefits: Array<{
+                    valueProposition: string;
+                }>;
+            };
+        }> | null;
         firstImage: Image;
         subscriptionPlans: Array<{
             identifier: string;

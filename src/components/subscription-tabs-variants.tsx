@@ -13,13 +13,13 @@ type SubscriptionVariantsProps = {
 export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsProps) {
     console.log({ subscription });
     return (
-        <ul className="flex gap-12 py-12 justify-center items-stretch ">
+        <ul className="flex gap-12 py-12 justify-center items-stretch">
             {subscription.variants.map((variant) => (
                 <li
                     key={variant.sku}
-                    className="border relative border-black rounded-lg text-center w-full overflow-hidden"
+                    className="border relative bg-yellow border-black rounded-lg text-center w-full overflow-hidden "
                 >
-                    <div className="px-12 py-12">
+                    <div className="px-12 py-12 bg-white border-b border-black">
                         <div className="flex justify-between">
                             <div></div>
                             <div className="[&_img]:object-contain [&_img]:w-full [&_img]:h-full w-10 aspect-square rounded-lg bg-yellow border border-black p-1 relative translate-x-6 -translate-y-6">
@@ -80,27 +80,32 @@ export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsPr
                             })}
                         </div>
                     </div>
-                    <div className="py-12 px-12 bg-yellow border-t border-black text-left">
-                        <h4 className="font-semibold text-base">Essential Benefits</h4>
-                        <ul className="flex flex-col gap-2 pt-4">
-                            <li className="relative flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
-                                All-in-one solution for work and play.
-                            </li>
-                            <li className="relative flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
-                                Sync on just enough devices (exactly two).
-                            </li>
-                            <li className="relative flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
-                                Support that’s there… eventually.
-                            </li>
-                            <li className="relative flex items-center gap-2">
-                                <NextImage src="/icon_checkmark.svg" alt="Checkmark icon" width={30} height={30} />
-                                Affordable monthly price.
-                            </li>
-                        </ul>
-                    </div>
+                    {variant.usp?.map((usp, uspIndex) => {
+                        const { header, benefits } = usp.uniqueBenefits;
+                        return (
+                            <div className="py-12 px-12 bg-yellow text-left" key={`${variant.sku}-usp-${uspIndex}`}>
+                                <h4 className="font-semibold text-base">{header}</h4>
+                                {benefits?.length > 0 && (
+                                    <ul className="flex flex-col gap-2 pt-4">
+                                        {benefits.map((benefit, index) => (
+                                            <li
+                                                className="relative flex items-center gap-2"
+                                                key={`${variant.sku}-benefit-${uspIndex}-${index}`}
+                                            >
+                                                <NextImage
+                                                    src="/icon_checkmark.svg"
+                                                    alt="Checkmark icon"
+                                                    width={30}
+                                                    height={30}
+                                                />
+                                                {benefit.valueProposition}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        );
+                    })}
                 </li>
             ))}
         </ul>

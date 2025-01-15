@@ -108,7 +108,7 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
                         name="street"
                         placeholder="Street"
                         className={'input-field'}
-                        defaultValue={customer?.addresses?.[0].street}
+                        defaultValue={customer?.addresses?.[0]?.street}
                     />
                 </div>
                 <div className={'input-group'}>
@@ -120,7 +120,7 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
                         name="street2"
                         placeholder="Apt, suite, unit number, etc (optional)"
                         className={'input-field'}
-                        defaultValue={customer?.addresses?.[0].street2}
+                        defaultValue={customer?.addresses?.[0]?.street2}
                     />
                 </div>
                 <div className="grid grid-cols-3">
@@ -133,7 +133,7 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
                             name="postalCode"
                             placeholder="Postal code"
                             className={'input-field'}
-                            defaultValue={customer?.addresses?.[0].postalCode}
+                            defaultValue={customer?.addresses?.[0]?.postalCode}
                         />
                     </div>
                     <div className={clsx('input-group', 'col-span-2 border-l-0')}>
@@ -146,7 +146,7 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
                             name="city"
                             placeholder="City"
                             className={'input-field'}
-                            defaultValue={customer?.addresses?.[0].city}
+                            defaultValue={customer?.addresses?.[0]?.city}
                         />
                     </div>
                 </div>
@@ -161,7 +161,7 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
                         name="country"
                         className={'input-field'}
                         placeholder="Country"
-                        defaultValue={customer?.addresses?.[0].country}
+                        defaultValue={customer?.addresses?.[0]?.country}
                     />
                 </div>
             </fieldset>

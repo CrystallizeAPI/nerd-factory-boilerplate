@@ -25,13 +25,23 @@ export const createSubscriptionFetcher = ({ crystallizeClient }: Deps) => {
 const QUERY = `#graphql
 {
   browse {
-    product {
+    product(sorting: {position:asc}) {
       hits {
         path
         name
+        component_name
+        description(format:json)
         variants {
           name
           sku
+          usp {
+            uniqueBenefits {
+              header
+              benefits {
+                valueProposition
+              }
+            }
+          }
           description(format: json)
           firstImage {
             ...image
