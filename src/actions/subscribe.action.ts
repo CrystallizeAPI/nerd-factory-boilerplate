@@ -8,7 +8,6 @@ export async function subscribeAction(extras: { link: string }, prevState: unkno
     let redirectTo = `${extras.link}?success=true`;
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
-    console.log('subscribeAction');
     try {
         const payload = await authenticator.decodeToken(token || '');
         const sku = form.get('sku') as string;
