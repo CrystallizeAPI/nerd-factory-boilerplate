@@ -5,12 +5,11 @@ import { encodeBase64Url } from '@/core/utils';
 import { SubscriptionChoice } from '@/domain/contracts/subscription-choice';
 import { SubscriptionContractIntent } from '@/domain/contracts/subscription-contract-intent';
 import { useActionState, useState } from 'react';
+
 import Image from 'next/image';
 
 import clsx from 'clsx';
 export function SubscriptionContractIntentForm(intent: SubscriptionContractIntent) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [state, action, pending] = useActionState(subscribeAction, null);
     const [paymentMethod, setPaymentMethod] = useState('coin');
     const { plan, period, priceVariant, sku, path, customer } = intent;
     const choice: SubscriptionChoice = {
@@ -20,6 +19,12 @@ export function SubscriptionContractIntentForm(intent: SubscriptionContractInten
         priceVariant: priceVariant.identifier,
         sku,
     };
+    const subscribeActionWithRedirect = subscribeAction.bind(null, {
+        link: `/checkout/${encodeBase64Url(JSON.stringify(choice))}`,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [state, action, pending] = useActionState(subscribeActionWithRedirect, null);
 
     return (
         <form action={action} key={plan.identifier + period.id + priceVariant.identifier}>

@@ -8,8 +8,14 @@ import { notFound } from 'next/navigation';
 import { priceFormatter } from '@/components/currency-formatter';
 import { CheckoutSteps } from '@/components/checkout-steps';
 import { Image } from '@crystallize/reactjs-components';
-
-export default async function CheckoutPage({ params }: { params: Promise<{ choice: string }> }) {
+import Link from 'next/link';
+export default async function CheckoutPage({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ choice: string }>;
+    searchParams: { success: string };
+}) {
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
 
@@ -22,6 +28,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ choic
     const choiceParam = decodeURI((await params).choice);
     const choiceInput = JSON.parse(decodeBase64Url(choiceParam));
     const choiceResult = SubscriptionChoiceSchema.safeParse(choiceInput);
+    const checkoutSuccess = (await searchParams)?.success;
 
     if (!choiceResult.success) {
         return notFound();
@@ -55,7 +62,6 @@ export default async function CheckoutPage({ params }: { params: Promise<{ choic
     if (!priceVariant) {
         return notFound();
     }
-
     return (
         <>
             <div className="-mt-20 pt-20  bg-yellow">
@@ -82,13 +88,30 @@ export default async function CheckoutPage({ params }: { params: Promise<{ choic
                             </div>
                         </div>
                     </div>
-                    <CheckoutSteps currentStep={me ? 'persona' : 'account'} />
+                    <CheckoutSteps currentStep={checkoutSuccess ? 'done' : me ? 'persona' : 'account'} />
                 </div>
             </div>
             <div className="px-8 pb-20 gap-16 ">
                 <div className="block w-full max-w-screen-md mx-auto ">
                     <div className="">
-                        {me && (
+                        {checkoutSuccess && (
+                            <div className="max-w-screen-xl mx-auto px-12 py-24 text-center flex justify-center items-center flex-col">
+                                <h1 className="text-6xl font-black text-black pb-6">Thank you, {me?.firstName}</h1>
+                                <p className="text-xl text-black max-w-screen-md mx-auto text-balance pb-12">
+                                    Thank you for subscribing to NerdFactory! You’re now part of our creative and
+                                    tech-savvy community. Stay tuned for updates, exclusive content, and the latest
+                                    innovations straight to your inbox.
+                                </p>
+                                <Link
+                                    href="/my/subscriptions"
+                                    className="py-2 px-6 text-sm text-black font-bold  flex gap-2  items-center float-right bg-black/5 rounded-lg m-2 hover:border-black border border-transparent"
+                                >
+                                    <Image src="/icon_user.svg" alt="User icon" width={16} height={16} />
+                                    My account
+                                </Link>
+                            </div>
+                        )}
+                        {me && !checkoutSuccess && (
                             <div>
                                 <SubscriptionContractIntentForm
                                     sku={variant.sku}
@@ -106,7 +129,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ choic
                                 />
                             </div>
                         )}
-                        {!me && (
+                        {!me && !checkoutSuccess && (
                             <div>
                                 <div className="pt-20">
                                     <LoginOrRegisterForm redirect={`/checkout/${choiceParam}`} />
