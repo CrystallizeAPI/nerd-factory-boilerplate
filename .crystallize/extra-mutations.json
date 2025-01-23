@@ -1,0 +1,55 @@
+{
+    "subscription-plan": {
+        "mutation": "mutation CreateSubscriptionPlan ($input: CreateSubscriptionPlanInput!) { subscriptionPlan { create(input: $input) { identifier } } }",
+        "sets": [
+            {
+                "input": {
+                    "tenantId": "##TENANT_ID##",
+                    "identifier": "flat-fee-monthly",
+                    "name": "Flat fee monthly",
+                    "periods": [
+                        {
+                            "name": "Monthly",
+                            "initial": {
+                                "period": 1,
+                                "unit": "month"
+                            },
+                            "recurring": {
+                                "period": 1,
+                                "unit": "month"
+                            }
+                        }
+                    ],
+                    "meteredVariables": []
+                }
+            },
+            {
+                "input": {
+                    "tenantId": "##TENANT_ID##",
+                    "identifier": "app-subscription",
+                    "name": "App Subscription",
+                    "periods": [
+                        {
+                            "name": "Monthly",
+                            "initial": {
+                                "period": 1,
+                                "unit": "month"
+                            },
+                            "recurring": {
+                                "period": 1,
+                                "unit": "month"
+                            }
+                        }
+                    ],
+                    "meteredVariables": [
+                        {
+                            "name": "Seats",
+                            "identifier": "seats",
+                            "unit": "Users"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,7 +1,7 @@
 import { computeContractBill, createNewOrderFromContractAndUsage } from '@/core/di.server';
 import { NextResponse } from 'next/server';
 
-// @todo: Signature verifiacation
+// @todo: Signature verification
 export async function POST(request: Request) {
     const body = await request.json();
     const contract = body.subscriptionContract.get;

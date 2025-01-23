@@ -1,0 +1,151 @@
+{
+    "version": "0.0.1",
+    "operations": [
+        {
+            "identifier": "folder",
+            "name": "Folder",
+            "components": [
+                {
+                    "id": "name",
+                    "type": "singleLine",
+                    "name": "Name",
+                    "config": {
+                        "singleLine": {
+                            "multilingual": true
+                        }
+                    }
+                },
+                {
+                    "id": "description",
+                    "type": "richText",
+                    "name": "Description",
+                    "config": {
+                        "richText": {
+                            "multilingual": true
+                        }
+                    }
+                }
+            ],
+            "type": "folder",
+            "intent": "shape/upsert"
+        },
+        {
+            "identifier": "unique-benefits",
+            "name": "unique-benefits",
+            "components": [
+                {
+                    "id": "header",
+                    "type": "singleLine",
+                    "name": "Header",
+                    "config": {
+                        "singleLine": {
+                            "multilingual": true,
+                            "required": false,
+                            "discoverable": true
+                        }
+                    }
+                },
+                {
+                    "id": "benefits",
+                    "type": "contentChunk",
+                    "name": "Benefits",
+                    "config": {
+                        "contentChunk": {
+                            "discoverable": true,
+                            "components": [
+                                {
+                                    "id": "value-proposition",
+                                    "type": "singleLine",
+                                    "name": "Value proposition",
+                                    "config": {
+                                        "singleLine": {
+                                            "multilingual": true,
+                                            "required": false,
+                                            "discoverable": true
+                                        }
+                                    }
+                                }
+                            ],
+                            "repeatable": true
+                        }
+                    }
+                }
+            ],
+            "intent": "piece/upsert"
+        },
+        {
+            "identifier": "product",
+            "name": "Product",
+            "components": [
+                {
+                    "id": "name",
+                    "type": "singleLine",
+                    "name": "Name",
+                    "config": {
+                        "singleLine": {
+                            "multilingual": true
+                        }
+                    }
+                },
+                {
+                    "id": "description",
+                    "type": "richText",
+                    "name": "Description",
+                    "config": {
+                        "richText": {
+                            "multilingual": true
+                        }
+                    }
+                },
+                {
+                    "id": "story",
+                    "type": "paragraphCollection",
+                    "name": "Story",
+                    "config": {
+                        "paragraphCollection": {
+                            "multilingual": ["title", "body"]
+                        }
+                    }
+                }
+            ],
+            "variantComponents": [
+                {
+                    "id": "description",
+                    "type": "richText",
+                    "name": "Description",
+                    "config": {
+                        "richText": {
+                            "multilingual": true,
+                            "discoverable": true
+                        }
+                    }
+                },
+                {
+                    "id": "usp",
+                    "type": "contentChunk",
+                    "name": "USP",
+                    "config": {
+                        "contentChunk": {
+                            "discoverable": true,
+                            "components": [
+                                {
+                                    "id": "unique-benefits",
+                                    "type": "piece",
+                                    "name": "Unique Benefits",
+                                    "config": {
+                                        "piece": {
+                                            "identifier": "unique-benefits"
+                                        }
+                                    }
+                                }
+                            ],
+                            "repeatable": true
+                        }
+                    }
+                }
+            ],
+            "type": "product",
+            "intent": "shape/upsert"
+        }
+    ]
+}

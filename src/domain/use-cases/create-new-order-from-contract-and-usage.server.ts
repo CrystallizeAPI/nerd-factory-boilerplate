@@ -40,7 +40,7 @@ export const createOrderInstanciator =
                 ...(contract.customer && {
                     firstName: contract.customer.firstName,
                     lastName: contract.customer.lastName,
-                    companyName: contract.customer.lastName,
+                    companyName: contract.customer.companyName,
                 }),
                 addresses: [
                     //@ts-expect-error - It's an enum in the API
