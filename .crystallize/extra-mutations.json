@@ -1,5 +1,5 @@
 {
-    "subscription-plan": {
+    "subscription-plans": {
         "mutation": "mutation CreateSubscriptionPlan ($input: CreateSubscriptionPlanInput!) { subscriptionPlan { create(input: $input) { identifier } } }",
         "sets": [
             {
@@ -46,6 +46,263 @@
                             "name": "Seats",
                             "identifier": "seats",
                             "unit": "Users"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "products": {
+        "mutation": "mutation CreateProduct($input: CreateProductInput!) { product { create(input: $input, language: \"en\", disableComponentValidation: true) { id } } }",
+        "sets": [
+            {
+                "input": {
+                    "tenantId": "##TENANT_ID##",
+                    "shapeIdentifier": "product",
+                    "name": "Super App",
+                    "vatTypeId": "##TENANT_DEFAULT_VATTYPE_ID##",
+                    "tree": {
+                        "parentId": "##TENANT_ROOT_ID##"
+                    },
+                    "variants": [
+                        {
+                            "name": "Flat",
+                            "sku": "super-app-flat",
+                            "isDefault": true,
+                            "components": [
+                                {
+                                    "componentId": "description",
+                                    "richText": {
+                                        "html": [
+                                            "<p>Set a fixed amount for regular, predictable subscription charges.</p>"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "componentId": "usp",
+                                    "contentChunk": {
+                                        "chunks": [
+                                            [
+                                                {
+                                                    "componentId": "unique-benefits",
+                                                    "piece": {
+                                                        "identifier": "unique-benefits",
+                                                        "components": [
+                                                            {
+                                                                "componentId": "header",
+                                                                "singleLine": {
+                                                                    "text": "Essential Benefits"
+                                                                }
+                                                            },
+                                                            {
+                                                                "componentId": "benefits",
+                                                                "contentChunk": {
+                                                                    "chunks": [
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "All-in-one solution for work and play."
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "Sync on just enough devices (exactly two)."
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "Support that's there… eventually."
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "Affordable monthly price."
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Volume",
+                            "sku": "super-app-volume",
+                            "isDefault": false,
+                            "components": [
+                                {
+                                    "componentId": "description",
+                                    "richText": {
+                                        "html": [
+                                            "<p>Depending on numbers of seats you add will fall into different brackets of pricings.</p>"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "componentId": "usp",
+                                    "contentChunk": {
+                                        "chunks": [
+                                            [
+                                                {
+                                                    "componentId": "unique-benefits",
+                                                    "piece": {
+                                                        "identifier": "unique-benefits",
+                                                        "components": [
+                                                            {
+                                                                "componentId": "header",
+                                                                "singleLine": {
+                                                                    "text": "The Basics, But Better"
+                                                                }
+                                                            },
+                                                            {
+                                                                "componentId": "benefits",
+                                                                "contentChunk": {
+                                                                    "chunks": [
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "Every feature, every tool, all unlocked."
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "Sync on all your devices (even that old tablet)."
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "VIP support—because you deserve it."
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        [
+                                                                            {
+                                                                                "componentId": "value-proposition",
+                                                                                "singleLine": {
+                                                                                    "text": "First dibs on shiny new updates."
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Graduated",
+                            "sku": "super-app-graduated",
+                            "isDefault": false,
+                            "components": [
+                                {
+                                    "componentId": "description",
+                                    "richText": {
+                                        "html": [
+                                            "<p>Price of a single seat decreases based on the quantity of seats you add.</p>"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "components": [
+                        {
+                            "componentId": "name",
+                            "singleLine": {
+                                "text": "Your Ultimate Digital Companion"
+                            }
+                        },
+                        {
+                            "componentId": "description",
+                            "richText": {
+                                "html": [
+                                    "<p>All-in-one tools for work, life, and play. Subscribe now and unlock your superpowers.</p>"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "input": {
+                    "tenantId": "##TENANT_ID##",
+                    "shapeIdentifier": "product",
+                    "name": "My Streaming Service",
+                    "vatTypeId": "##TENANT_DEFAULT_VATTYPE_ID##",
+                    "tree": {
+                        "parentId": "##TENANT_ROOT_ID##"
+                    },
+                    "variants": [
+                        {
+                            "name": "My Streaming Service Basic",
+                            "sku": "basic",
+                            "isDefault": true,
+                            "components": [
+                                {
+                                    "componentId": "description",
+                                    "richText": {
+                                        "html": [
+                                            "<p>Set a fixed amount for regular, predictable subscription charges.</p>"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "My Streaming Service Premium",
+                            "sku": "premium",
+                            "isDefault": false
+                        },
+                        {
+                            "name": "My Streaming Service Family",
+                            "sku": "family",
+                            "isDefault": false
+                        }
+                    ],
+                    "components": [
+                        {
+                            "componentId": "name",
+                            "singleLine": {
+                                "text": "Your stream service concierge"
+                            }
+                        },
+                        {
+                            "componentId": "description",
+                            "richText": {
+                                "html": [
+                                    "<p>Subscribe now and unlock your superpowers. All-in-one tools for work, life, and play.</p>"
+                                ]
+                            }
                         }
                     ]
                 }
