@@ -2,8 +2,10 @@
 
 import { sendMagickLinkAction } from '@/actions/send-magick-link.action';
 import { useActionState, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
+import { Login } from '../login';
+import { CreateAccount } from '../create-account';
+
 export default function LoginOrRegisterForm({ redirect }: { redirect?: string }) {
     const [link, action, pending] = useActionState(sendMagickLinkAction, null);
     const [currentForm, setCurrentForm] = useState<'login' | 'register'>('login');
@@ -53,71 +55,3 @@ export default function LoginOrRegisterForm({ redirect }: { redirect?: string })
         </div>
     );
 }
-
-export const Login = ({
-    redirect,
-    action,
-    pending,
-}: {
-    redirect?: string;
-    action: (payload: FormData) => void;
-    pending: boolean;
-}) => {
-    const searchParams = useSearchParams();
-
-    return (
-        <form action={action}>
-            <div className="input-group rounded-2xl border w-full">
-                <label className="input-label">Email</label>
-                <input name="email" type="email" placeholder="batman@notbrucewayne.com" className="input-field" />
-                <input name="redirect" type="hidden" value={searchParams.get('redirect') || redirect || '/'} />
-            </div>
-
-            <button
-                type="submit"
-                className="px-8 mt-6 block ml-auto mr-0  py-3 bg-black text-white font-bold  rounded-lg "
-                disabled={pending}
-            >
-                Login
-            </button>
-        </form>
-    );
-};
-
-export const CreateAccount = ({
-    action,
-    pending,
-    redirect,
-}: {
-    redirect?: string;
-    action: (payload: FormData) => void;
-    pending: boolean;
-}) => {
-    const searchParams = useSearchParams();
-
-    return (
-        <form action={action}>
-            <input name="redirect" type="hidden" value={searchParams.get('redirect') || redirect || '/'} />
-
-            <div className="input-group rounded-t-2xl w-full">
-                <label className="input-label">Email</label>
-                <input name="email" type="email" placeholder="batman@notbrucewayne.com" className="input-field" />
-            </div>
-            <div className="input-group  w-full">
-                <label className="input-label">First name</label>
-                <input name="firstname" placeholder="Bruce" className="input-field" />
-            </div>
-            <div className="input-group rounded-b-2xl border-b w-full">
-                <label className="input-label">Surname</label>
-                <input name="surname" placeholder="Wayne" className="input-field" />
-            </div>
-            <button
-                type="submit"
-                className="px-8 mt-6 ml-auto mr-0 py-3 block bg-black text-white font-bold rounded-lg "
-                disabled={pending}
-            >
-                Register
-            </button>
-        </form>
-    );
-};

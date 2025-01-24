@@ -14,7 +14,7 @@ export default async function CheckoutPage({
     searchParams,
 }: {
     params: Promise<{ choice: string }>;
-    searchParams: { success: string };
+    searchParams: Promise<{ success: string }>;
 }) {
     const cookieStore = await cookies();
     const token = cookieStore.get('auth.token')?.value;
