@@ -7,3 +7,6 @@ _Congratualions!_ Project has been installed with success.
 ```sh
 $ npm run dev
 ```
+
+This project is using the Discovery API.
+If you have boostrapped a new tenant during this installation process you will have to ignite your tenant for Discovery API.
