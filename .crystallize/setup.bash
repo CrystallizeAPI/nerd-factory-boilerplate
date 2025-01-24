@@ -22,7 +22,7 @@ echo "Running command ${PROJECT_PATH}"
 if ! command -v pnpm &> /dev/null; then
     cd ${PROJECT_PATH} && npm install --no-progress --no-color
 else 
-    cd ${PROJECT_PATH} && pnpm install --no-progress --no-color
+    cd ${PROJECT_PATH} && pnpm install --silent --no-color
 fi
 #---
 
