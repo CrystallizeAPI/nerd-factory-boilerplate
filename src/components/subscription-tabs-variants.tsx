@@ -21,17 +21,31 @@ export function SubscriptionTabVariants({ subscription }: SubscriptionVariantsPr
                     <div className="px-12 py-12 bg-white border-b border-black">
                         <div className="flex justify-between">
                             <div></div>
-                            <div className="[&_img]:object-contain [&_img]:w-full [&_img]:h-full w-10 aspect-square rounded-lg bg-yellow border border-black p-1 relative translate-x-6 -translate-y-6">
-                                <Image
-                                    {...variant.firstImage}
-                                    key={variant.firstImage.key}
-                                    alt={variant.name}
-                                    className="w-full h-full"
-                                />
-                            </div>
+                            {variant.firstImage && (
+                                <div className="[&_img]:object-contain [&_img]:w-full [&_img]:h-full w-10 aspect-square rounded-lg bg-yellow border border-black p-1 relative translate-x-6 -translate-y-6">
+                                    <Image
+                                        {...variant.firstImage}
+                                        key={variant.firstImage.key}
+                                        alt={variant.name}
+                                        className="w-full h-full"
+                                    />
+                                </div>
+                            )}
                         </div>
                         <h3 className="text-xl font-black text-left">{variant.name}</h3>
                         <div className="flex flex-col gap-2 justify-center">
+                            {variant.subscriptionPlans.length === 0 && (
+                                <div className="rounded-lg m-2 flex items-center text-center justify-center p-10 bg-red-100">
+                                    <small>
+                                        There is nothing to show.
+                                        <br />
+                                        <strong>
+                                            Most likely you did not setup the Subscription Plan on each SKU!
+                                        </strong>
+                                        .
+                                    </small>
+                                </div>
+                            )}
                             {variant.subscriptionPlans.flatMap((plan) => {
                                 return plan.periods.flatMap((period) => {
                                     const priceVariant = period.recurring.priceVariants[FORCED_PRICE_VARIANT];
