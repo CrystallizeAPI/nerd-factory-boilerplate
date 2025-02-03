@@ -4,9 +4,14 @@ _Congratualions!_ Project has been installed with success.
 
 ## Running it locally
 
-```sh
+### Using NPM
+
+```bash
 $ npm run dev
 ```
 
-This project is using the Discovery API.
-If you have boostrapped a new tenant during this installation process you will have to ignite your tenant for Discovery API.
+### Using PNPM
+```bash
+$ pnpm run dev
+```
+
