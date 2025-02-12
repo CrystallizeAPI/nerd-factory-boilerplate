@@ -1,10 +1,11 @@
 {
-    "subscription-plans": {
-        "mutation": "mutation CreateSubscriptionPlan ($input: CreateSubscriptionPlanInput!) { subscriptionPlan { create(input: $input) { identifier } } }",
+    "create-subscription-plans": {
+        "mutation": "mutation CreateSubscriptionPlan($input: CreateSubscriptionPlanInput!) { subscriptionPlan { create(input: $input) { identifier periods { id } meteredVariables { id identifier } } } }",
+        "target": "pim",
         "sets": [
             {
                 "input": {
-                    "tenantId": "##TENANT_ID##",
+                    "tenantId": "$root.TENANT_ID",
                     "identifier": "flat-fee-monthly",
                     "name": "Flat fee monthly",
                     "periods": [
@@ -25,7 +26,7 @@
             },
             {
                 "input": {
-                    "tenantId": "##TENANT_ID##",
+                    "tenantId": "$root.TENANT_ID",
                     "identifier": "app-subscription",
                     "name": "App Subscription",
                     "periods": [
@@ -52,23 +53,25 @@
             }
         ]
     },
-    "products": {
+    "create-products": {
         "mutation": "mutation CreateProduct($input: CreateProductInput!) { product { create(input: $input, language: \"en\", disableComponentValidation: true) { id } } }",
+        "target": "pim",
         "sets": [
             {
                 "input": {
-                    "tenantId": "##TENANT_ID##",
+                    "tenantId": "$root.TENANT_ID",
                     "shapeIdentifier": "product",
                     "name": "Super App",
-                    "vatTypeId": "##TENANT_DEFAULT_VATTYPE_ID##",
+                    "vatTypeId": "$root.TENANT_DEFAULT_VATTYPE_ID",
                     "tree": {
-                        "parentId": "##TENANT_ROOT_ID##"
+                        "parentId": "$root.TENANT_ROOT_ID"
                     },
                     "variants": [
                         {
                             "name": "Flat",
                             "sku": "super-app-flat",
                             "isDefault": true,
+                            "images":[ { "key":"$images.images-superapp-flat-svg" }],
                             "components": [
                                 {
                                     "componentId": "description",
@@ -140,12 +143,91 @@
                                         ]
                                     }
                                 }
+                            ],
+                            "subscriptionPlans": [
+                                {
+                                    "identifier": "$create-subscription-plans[1].subscriptionPlan.create.identifier",
+                                    "periods": [
+                                        {
+                                            "id": "$create-subscription-plans[1].subscriptionPlan.create.periods[0].id",
+                                            "initial": {
+                                                "price": 0,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 0
+                                                    }
+                                                ],
+                                                "meteredVariables": [
+                                                    {
+                                                        "id": "$create-subscription-plans[1].subscriptionPlan.create.meteredVariables[0].id",
+                                                        "tierType": "graduated",
+                                                        "tiers": [
+                                                            {
+                                                                "threshold": 0,
+                                                                "price": 0,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "recurring": {
+                                                "price": 19,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 19
+                                                    }
+                                                ],
+                                                "meteredVariables": [
+                                                    {
+                                                        "id": "$create-subscription-plans[1].subscriptionPlan.create.meteredVariables[0].id",
+                                                        "tierType": "graduated",
+                                                        "tiers": [
+                                                            {
+                                                                "threshold": 0,
+                                                                "price": 2,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 2
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "threshold": 1,
+                                                                "price": 0,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
                             ]
                         },
                         {
                             "name": "Volume",
                             "sku": "super-app-volume",
                             "isDefault": false,
+                            "images": [
+                                {
+                                    "key": "$images.images-superapp-volume-svg"
+                                }
+                            ],
                             "components": [
                                 {
                                     "componentId": "description",
@@ -217,12 +299,111 @@
                                         ]
                                     }
                                 }
+                            ],
+                            "subscriptionPlans": [
+                                {
+                                    "identifier": "$create-subscription-plans[1].subscriptionPlan.create.identifier",
+                                    "periods": [
+                                        {
+                                            "id": "$create-subscription-plans[1].subscriptionPlan.create.periods[0].id",
+                                            "initial": {
+                                                "price": 0,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 0
+                                                    }
+                                                ],
+                                                "meteredVariables": [
+                                                    {
+                                                        "id": "$create-subscription-plans[1].subscriptionPlan.create.meteredVariables[0].id",
+                                                        "tierType": "volume",
+                                                        "tiers": [
+                                                            {
+                                                                "threshold": 0,
+                                                                "price": 0,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 0
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "threshold": 5,
+                                                                "price": 2,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 2
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "recurring": {
+                                                "price": 19,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 19
+                                                    }
+                                                ],
+                                                "meteredVariables": [
+                                                    {
+                                                        "id": "$create-subscription-plans[1].subscriptionPlan.create.meteredVariables[0].id",
+                                                        "tierType": "volume",
+                                                        "tiers": [
+                                                            {
+                                                                "threshold": 0,
+                                                                "price": 3,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 3
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "threshold":5,
+                                                                "price": 2,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 2
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "threshold": 15,
+                                                                "price": 1.5,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 1.5
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
                             ]
                         },
                         {
                             "name": "Graduated",
                             "sku": "super-app-graduated",
                             "isDefault": false,
+                            "images": [
+                                {
+                                    "key": "$images.images-superapp-graduated-svg"
+                                }
+                            ],
                             "components": [
                                 {
                                     "componentId": "description",
@@ -231,6 +412,63 @@
                                             "<p>Price of a single seat decreases based on the quantity of seats you add.</p>"
                                         ]
                                     }
+                                }
+                            ],
+                            "subscriptionPlans": [
+                                {
+                                    "identifier": "$create-subscription-plans[1].subscriptionPlan.create.identifier",
+                                    "periods": [
+                                        {
+                                            "id": "$create-subscription-plans[1].subscriptionPlan.create.periods[0].id",
+                                            "recurring": {
+                                                "price": 19,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 19
+                                                    }
+                                                ],
+                                                "meteredVariables": [
+                                                    {
+                                                        "id": "$create-subscription-plans[1].subscriptionPlan.create.meteredVariables[0].id",
+                                                        "tierType": "graduated",
+                                                        "tiers": [
+                                                            {
+                                                                "threshold": 0,
+                                                                "price": 0,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 0
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "threshold": 5,
+                                                                "price": 2,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 2
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "threshold": 15,
+                                                                "price": 1,
+                                                                "priceVariants": [
+                                                                    {
+                                                                        "identifier": "default",
+                                                                        "price": 1
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -255,18 +493,23 @@
             },
             {
                 "input": {
-                    "tenantId": "##TENANT_ID##",
+                    "tenantId": "$root.TENANT_ID",
                     "shapeIdentifier": "product",
                     "name": "My Streaming Service",
-                    "vatTypeId": "##TENANT_DEFAULT_VATTYPE_ID##",
+                    "vatTypeId": "$root.TENANT_DEFAULT_VATTYPE_ID",
                     "tree": {
-                        "parentId": "##TENANT_ROOT_ID##"
+                        "parentId": "$root.TENANT_ROOT_ID"
                     },
                     "variants": [
                         {
                             "name": "My Streaming Service Basic",
                             "sku": "basic",
                             "isDefault": true,
+                            "images": [
+                                {
+                                    "key": "$images.images-crystallize-png"
+                                }
+                            ],
                             "components": [
                                 {
                                     "componentId": "description",
@@ -276,17 +519,84 @@
                                         ]
                                     }
                                 }
+                            ],
+                            "subscriptionPlans": [
+                                {
+                                    "identifier": "$create-subscription-plans[0].subscriptionPlan.create.identifier",
+                                    "periods": [
+                                        {
+                                            "id": "$create-subscription-plans[0].subscriptionPlan.create.periods[0].id",
+                                            "recurring": {
+                                                "price": 9,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 9
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
                             ]
                         },
                         {
                             "name": "My Streaming Service Premium",
                             "sku": "premium",
-                            "isDefault": false
+                            "isDefault": false,
+                            "images": [
+                                {
+                                    "key": "$images.images-crystallize-png"
+                                }
+                            ],
+                            "subscriptionPlans": [
+                                {
+                                    "identifier": "$create-subscription-plans[0].subscriptionPlan.create.identifier",
+                                    "periods": [
+                                        {
+                                            "id": "$create-subscription-plans[0].subscriptionPlan.create.periods[0].id",
+                                            "recurring": {
+                                                "price": 12,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 12
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name": "My Streaming Service Family",
                             "sku": "family",
-                            "isDefault": false
+                            "isDefault": false,
+                            "images": [
+                                {
+                                    "key": "$images.images-crystallize-png"
+                                }
+                            ],
+                            "subscriptionPlans": [
+                                {
+                                    "identifier": "$create-subscription-plans[0].subscriptionPlan.create.identifier",
+                                    "periods": [
+                                        {
+                                            "id": "$create-subscription-plans[0].subscriptionPlan.create.periods[0].id",
+                                            "recurring": {
+                                                "price": 15,
+                                                "priceVariants": [
+                                                    {
+                                                        "identifier": "default",
+                                                        "price": 15
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ],
                     "components": [
@@ -306,6 +616,18 @@
                         }
                     ]
                 }
+            }
+        ]
+    },
+    "publish-products": {
+        "mutation": "mutation PublishProduct($ids: [ID!]!) { publishItems(language: \"en\", ids: $ids) { ... on PublishItemsRequest { success { itemId } } } }",
+        "target": "core",
+        "sets": [
+            {
+                "ids": [
+                    "$create-products[0].product.create.id",
+                    "$create-products[1].product.create.id"
+                ]
             }
         ]
     }
